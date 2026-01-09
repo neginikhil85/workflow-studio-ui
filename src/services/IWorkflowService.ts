@@ -29,4 +29,14 @@ export interface IWorkflowService {
      * Gets a summary list of all workflows
      */
     getWorkflowList(): Promise<WorkflowSummary[]>;
+
+    /**
+     * Stops a running workflow by ID
+     */
+    stopWorkflow(id: string): Promise<void>;
+
+    /**
+     * Checks if a workflow is currently running
+     */
+    getWorkflowStatus(id: string): Promise<{ isRunning: boolean }>;
 }

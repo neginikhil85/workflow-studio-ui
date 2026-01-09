@@ -26,6 +26,8 @@ const WorkflowLayout: React.FC = () => {
         onSaveConfig,
         saveWorkflow,
         runWorkflow,
+        stopWorkflow,
+        isRunning,
         clearWorkflow,
         loadWorkflow,
         workflowId,
@@ -39,6 +41,8 @@ const WorkflowLayout: React.FC = () => {
             <Header
                 onSave={saveWorkflow}
                 onRun={runWorkflow}
+                onStop={stopWorkflow}
+                isRunning={isRunning}
                 onClear={clearWorkflow}
                 onWorkflows={() => setIsListOpen(true)}
                 workflowId={workflowId}

@@ -81,4 +81,23 @@ export class HttpWorkflowService implements IWorkflowService {
             throw new Error(e.response?.data?.message || "Failed to get workflow list");
         }
     }
+
+    async stopWorkflow(id: string): Promise<void> {
+        try {
+            await axios.post(`${this.baseUrl}/workflows/${id}/stop`);
+        } catch (e: any) {
+            console.error("Failed to stop workflow", e);
+            throw new Error(e.response?.data?.message || "Failed to stop workflow");
+        }
+    }
+
+    async getWorkflowStatus(id: string): Promise<{ isRunning: boolean }> {
+        try {
+            const response = await axios.get(`${this.baseUrl}/workflows/${id}/status`);
+            return { isRunning: response.data.isRunning };
+        } catch (e: any) {
+            console.error("Failed to get workflow status", e);
+            throw new Error(e.response?.data?.message || "Failed to get workflow status");
+        }
+    }
 }

@@ -43,7 +43,7 @@ const SIDEBAR_SECTIONS = [
         title: 'Integration',
         items: [
             { label: 'HTTP Request', nodeType: 'IntegrationNodeType_HTTP_CALL', icon: Globe, color: 'text-emerald-600' },
-            { label: 'Kafka Producer', nodeType: 'IntegrationNodeType_KAFKA', icon: KafkaIcon, color: 'text-fuchsia-600' },
+            { label: 'Kafka', nodeType: 'IntegrationNodeType_KAFKA', icon: KafkaIcon, color: 'text-fuchsia-600' },
             { label: 'Artemis Queue', nodeType: 'IntegrationNodeType_ARTEMIS_QUEUE', icon: ArtemisIcon, color: 'text-pink-600' },
             { label: 'ActiveMQ', nodeType: 'IntegrationNodeType_ACTIVE_MQ', icon: ActiveMQIcon, color: 'text-orange-600' }
         ]

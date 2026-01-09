@@ -1,16 +1,18 @@
 import React from 'react';
-import { Trash2, Play } from 'lucide-react';
+import { Trash2, Play, Square } from 'lucide-react';
 
 interface HeaderProps {
     onClear: () => void;
     onSave: () => void;
     onRun: () => void;
+    onStop: () => void;
+    isRunning: boolean;
     onWorkflows: () => void;
     workflowId?: string | null;
     workflowName?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ onClear, onSave, onRun, onWorkflows, workflowId, workflowName }) => {
+const Header: React.FC<HeaderProps> = ({ onClear, onSave, onRun, onStop, isRunning, onWorkflows, workflowId, workflowName }) => {
     return (
         <div className="h-14 bg-slate-100 border-b border-slate-200 flex items-center px-4 justify-between z-20 relative">
             <div className="flex items-center gap-4">
@@ -52,13 +54,23 @@ const Header: React.FC<HeaderProps> = ({ onClear, onSave, onRun, onWorkflows, wo
                     Save
                 </button>
 
-                <button
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-md shadow-sm shadow-emerald-500/30 transition-all active:scale-95"
-                    onClick={onRun}
-                >
-                    <Play size={14} fill="currentColor" />
-                    <span>Run</span>
-                </button>
+                {isRunning ? (
+                    <button
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md shadow-sm shadow-red-500/30 transition-all active:scale-95"
+                        onClick={onStop}
+                    >
+                        <Square size={14} fill="currentColor" />
+                        <span>Stop</span>
+                    </button>
+                ) : (
+                    <button
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-md shadow-sm shadow-emerald-500/30 transition-all active:scale-95"
+                        onClick={onRun}
+                    >
+                        <Play size={14} fill="currentColor" />
+                        <span>Run</span>
+                    </button>
+                )}
             </div>
         </div>
     );

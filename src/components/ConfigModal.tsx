@@ -7,6 +7,7 @@ import HttpConfigForm from './config-forms/HttpConfigForm';
 import CronConfigForm from './config-forms/CronConfigForm';
 import EmailConfigForm from './config-forms/EmailConfigForm';
 import WebhookConfigForm from './config-forms/WebhookConfigForm';
+import KafkaConfigForm from './config-forms/KafkaConfigForm';
 
 interface ConfigModalProps {
     node: WorkflowNode | null;
@@ -45,6 +46,8 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ node, isOpen, onClose, onSave
         switch (nodeType) {
             case 'IntegrationNodeType_HTTP_CALL':
                 return <HttpConfigForm config={config} onChange={handleConfigChange} />;
+            case 'IntegrationNodeType_KAFKA':
+                return <KafkaConfigForm config={config} onChange={handleConfigChange} />;
             case 'TriggerNodeType_CRON':
                 return <CronConfigForm config={config} onChange={handleConfigChange} />;
             case 'TriggerNodeType_WEBHOOK':

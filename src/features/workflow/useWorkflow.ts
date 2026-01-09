@@ -30,6 +30,9 @@ export const useWorkflow = () => {
     const [selectedNode, setSelectedNode] = useState<WorkflowNode | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Execution State
+    const [isRunning, setIsRunning] = useState(false);
+
     // --- HELPER: Duplicate Node ---
     const duplicateNode = useCallback((nodeId: string) => {
         setNodes((nds) => {
@@ -159,6 +162,7 @@ export const useWorkflow = () => {
             style: { ...node.style, border: 'none', boxShadow: 'none' }
         })));
 
+        setIsRunning(true);
         try {
             const result = await workflowService.executeWorkflow(workflowId);
             if (result.success && result.executedNodeIds) {
@@ -184,6 +188,22 @@ export const useWorkflow = () => {
         } catch (e: any) {
             console.error(e);
             toast.error(e.message || 'Execution failed');
+        } finally {
+            setIsRunning(false);
+        }
+    };
+
+    // --- ACTION: Stop Workflow ---
+    const stopWorkflow = async () => {
+        if (!workflowId) return;
+
+        try {
+            await workflowService.stopWorkflow(workflowId);
+            setIsRunning(false);
+            toast.info('Workflow stopped');
+        } catch (e: any) {
+            console.error(e);
+            toast.error(e.message || 'Failed to stop workflow');
         }
     };
 
@@ -290,6 +310,8 @@ export const useWorkflow = () => {
         onSaveConfig,
         saveWorkflow,
         runWorkflow,
+        stopWorkflow,
+        isRunning,
         clearWorkflow: createNewWorkflow,
         loadWorkflow,
         createNewWorkflow,

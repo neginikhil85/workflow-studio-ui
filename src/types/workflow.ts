@@ -10,6 +10,21 @@ export interface NodeConfig {
     headers?: Record<string, string> | { key: string; value: string }[];
     body?: string;
     params?: { key: string; value: string }[];
+
+    // Kafka configuration
+    bootstrapServers?: string;
+    securityProtocol?: 'PLAINTEXT' | 'SSL' | 'SASL_PLAINTEXT' | 'SASL_SSL';
+    sslTruststoreLocation?: string;
+    sslTruststorePassword?: string;
+    sslKeystoreLocation?: string;
+    sslKeystorePassword?: string;
+    saslMechanism?: 'PLAIN' | 'SCRAM-SHA-256' | 'SCRAM-SHA-512';
+    saslJaasConfig?: string;
+    kafkaMode?: 'PRODUCER' | 'CONSUMER';
+    topic?: string;
+    message?: string;
+    consumerGroup?: string;
+    pollTimeoutMs?: number;
 }
 
 export interface NodeData {
