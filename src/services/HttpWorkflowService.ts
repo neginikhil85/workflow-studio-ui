@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { IWorkflowService } from './IWorkflowService';
-import { Workflow, WorkflowSummary, ExecutionResult } from '../types/workflow';
+import { Workflow, WorkflowSummary, ExecutionResult } from '../types/workflow.interfaces';
+import { ApiResponse } from '../types/api.interfaces';
 
 /**
  * HTTP-based implementation of WorkflowService.
@@ -16,8 +17,8 @@ export class HttpWorkflowService implements IWorkflowService {
 
     async loadWorkflow(id: string): Promise<Workflow> {
         try {
-            const response = await axios.get(`${this.baseUrl}/workflows/${id}`);
-            return response.data;
+            const response = await axios.get<ApiResponse<Workflow>>(`${this.baseUrl}/workflows/${id}`);
+            return response.data.data;
         } catch (e: any) {
             console.error("Failed to load workflow", e);
             throw new Error(e.response?.data?.message || "Failed to load workflow");
@@ -28,11 +29,11 @@ export class HttpWorkflowService implements IWorkflowService {
         try {
             let response;
             if (workflow.id) {
-                response = await axios.put(`${this.baseUrl}/workflows/${workflow.id}`, workflow);
+                response = await axios.put<ApiResponse<Workflow>>(`${this.baseUrl}/workflows/${workflow.id}`, workflow);
             } else {
-                response = await axios.post(`${this.baseUrl}/workflows`, workflow);
+                response = await axios.post<ApiResponse<Workflow>>(`${this.baseUrl}/workflows`, workflow);
             }
-            return response.data.id;
+            return response.data.data.id!;
         } catch (e: any) {
             console.error("Failed to save workflow", e);
             throw new Error(e.response?.data?.message || "Failed to save workflow");
@@ -41,15 +42,15 @@ export class HttpWorkflowService implements IWorkflowService {
 
     async executeWorkflow(id: string): Promise<ExecutionResult> {
         try {
-            const response = await axios.post(`${this.baseUrl}/workflows/${id}/execute`, {});
-            // Backend returns: { success: true, result: { executedNodes: [], output: ... } }
-            // Mapping this nested structure to a clean ExecutionResult
+            const response = await axios.post<ApiResponse<any>>(`${this.baseUrl}/workflows/${id}/execute`, {});
+            // Backend returns: ApiResponse<Map<String, Object>>
+            // Data map keys: "executedNodes", "output", "runId"
 
-            const serverResult = response.data.result;
+            const resultData = response.data.data;
             return {
-                executedNodeIds: serverResult.executedNodes || [],
-                output: serverResult.output,
-                success: response.data.success !== false // Default true if field missing
+                executedNodeIds: resultData.executedNodes || [],
+                output: resultData.output,
+                success: response.data.success !== false
             };
         } catch (e: any) {
             console.error("Failed to execute workflow", e);
@@ -59,7 +60,7 @@ export class HttpWorkflowService implements IWorkflowService {
 
     async deleteWorkflow(id: string): Promise<void> {
         try {
-            await axios.delete(`${this.baseUrl}/workflows/${id}`);
+            await axios.delete<ApiResponse<void>>(`${this.baseUrl}/workflows/${id}`);
         } catch (e: any) {
             console.error("Failed to delete workflow", e);
             throw new Error(e.response?.data?.message || "Failed to delete workflow");
@@ -68,10 +69,8 @@ export class HttpWorkflowService implements IWorkflowService {
 
     async getWorkflowList(): Promise<WorkflowSummary[]> {
         try {
-            const response = await axios.get(`${this.baseUrl}/workflows`);
-            // Assuming backend returns list of full workflows or summaries.
-            // If full workflows, we map to summary
-            return response.data.map((w: any) => ({
+            const response = await axios.get<ApiResponse<Workflow[]>>(`${this.baseUrl}/workflows`);
+            return response.data.data.map((w: any) => ({
                 id: w.id,
                 name: w.name,
                 description: w.description
@@ -84,20 +83,43 @@ export class HttpWorkflowService implements IWorkflowService {
 
     async stopWorkflow(id: string): Promise<void> {
         try {
-            await axios.post(`${this.baseUrl}/workflows/${id}/stop`);
+            await axios.post<ApiResponse<void>>(`${this.baseUrl}/workflows/${id}/stop`);
         } catch (e: any) {
             console.error("Failed to stop workflow", e);
             throw new Error(e.response?.data?.message || "Failed to stop workflow");
         }
     }
 
-    async getWorkflowStatus(id: string): Promise<{ isRunning: boolean }> {
+    async getWorkflowStatus(id: string): Promise<{ isRunning: boolean; status: string }> {
         try {
-            const response = await axios.get(`${this.baseUrl}/workflows/${id}/status`);
-            return { isRunning: response.data.isRunning };
+            const response = await axios.get<ApiResponse<any>>(`${this.baseUrl}/workflows/${id}/status`);
+            return {
+                isRunning: response.data.data.isRunning,
+                status: response.data.data.status || 'IDLE'
+            };
         } catch (e: any) {
             console.error("Failed to get workflow status", e);
             throw new Error(e.response?.data?.message || "Failed to get workflow status");
+        }
+    }
+
+    async getWorkflowRuns(id: string): Promise<import('../types/workflow.interfaces').WorkflowRun[]> {
+        try {
+            const response = await axios.get<ApiResponse<import('../types/workflow.interfaces').WorkflowRun[]>>(`${this.baseUrl}/workflows/${id}/runs`);
+            return response.data.data;
+        } catch (e: any) {
+            console.error("Failed to get workflow runs", e);
+            throw new Error(e.response?.data?.message || "Failed to get workflow runs");
+        }
+    }
+
+    async getExecutionsForRun(runId: string): Promise<import('../types/workflow.interfaces').WorkflowExecution[]> {
+        try {
+            const response = await axios.get<ApiResponse<import('../types/workflow.interfaces').WorkflowExecution[]>>(`${this.baseUrl}/workflows/runs/${runId}/executions`);
+            return response.data.data;
+        } catch (e: any) {
+            console.error("Failed to get executions for run", e);
+            throw new Error(e.response?.data?.message || "Failed to get executions for run");
         }
     }
 }

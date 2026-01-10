@@ -1,4 +1,4 @@
-import { Workflow, WorkflowSummary, ExecutionResult } from '../types/workflow';
+import { Workflow, WorkflowSummary, ExecutionResult } from '../types/workflow.interfaces';
 
 /**
  * Contract for Workflow Service Operations.
@@ -36,7 +36,17 @@ export interface IWorkflowService {
     stopWorkflow(id: string): Promise<void>;
 
     /**
-     * Checks if a workflow is currently running
+     * Checks workflow status - returns isRunning flag and status enum
      */
-    getWorkflowStatus(id: string): Promise<{ isRunning: boolean }>;
+    getWorkflowStatus(id: string): Promise<{ isRunning: boolean; status: string }>;
+
+    /**
+     * Gets execution history (runs) for a workflow
+     */
+    getWorkflowRuns(id: string): Promise<import('../types/workflow.interfaces').WorkflowRun[]>;
+
+    /**
+     * Gets individual executions for a specific run
+     */
+    getExecutionsForRun(runId: string): Promise<import('../types/workflow.interfaces').WorkflowExecution[]>;
 }
