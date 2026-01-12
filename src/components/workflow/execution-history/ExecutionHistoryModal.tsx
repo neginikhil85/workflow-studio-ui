@@ -36,20 +36,9 @@ export const ExecutionHistoryModal: React.FC<ExecutionHistoryModalProps> = ({ is
     useEffect(() => {
         if (isOpen && workflowId) {
             setLoading(true);
-            // We need to cast persistence to any or extend the interface in useWorkflow hook
-            // Assuming persistence.service is accessible or we add getRuns to persistence wrapper
-            // Note: useWorkflowPersistence doesn't expose service directly usually.
-            // For now, I'll assume we expanded persistence wrapper or use service directly.
-            // Since we didn't update useWorkflowPersistence yet, I will create a temp fix here.
-
-            // Actually, best to import service directly if persistence wrapper is limited
-            // But let's verify if we can update persistence wrapper.
-            // For now, let's use the service instance if we can get it, or import HttpWorkflowService directly.
 
             const fetchRuns = async () => {
                 try {
-                    // Temporary direct service usage for speed, assuming single instance pattern
-                    // Ideally should come from hook
                     const { HttpWorkflowService } = await import('../../../services/HttpWorkflowService');
                     const service = new HttpWorkflowService();
                     const data = await service.getWorkflowRuns(workflowId);

@@ -57,6 +57,7 @@ export const useWorkflow = () => {
         },
         execution: {
             isRunning: execution.isExecuting,
+            status: execution.status,
             runWorkflow: execution.executeWorkflow,
             stopWorkflow: execution.stopExecution,
         },
