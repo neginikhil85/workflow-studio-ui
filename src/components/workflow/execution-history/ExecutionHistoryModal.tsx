@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { X, Clock, AlertCircle, CheckCircle, Ban, PlayCircle } from 'lucide-react';
-import { WorkflowRun } from '../../../types/workflow.interfaces';
+import { X, Clock, AlertCircle, CheckCircle, Ban, PlayCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { WorkflowRun, NodeExecutionResult } from '../../../types/workflow.interfaces';
+import { RunDetailsView } from './RunDetailsView';
+import { WORKFLOW_STATUS, TIME_MS, STATUS_COLORS } from '../../../config/constants';
 
 interface ExecutionHistoryModalProps {
     isOpen: boolean;
@@ -13,25 +15,28 @@ const formatDuration = (start: string, end?: string) => {
     const s = new Date(start).getTime();
     const e = new Date(end).getTime();
     const diff = e - s;
-    if (diff < 1000) return `${diff}ms`;
-    if (diff < 60000) return `${(diff / 1000).toFixed(2)}s`;
-    return `${(diff / 60000).toFixed(2)}m`;
+    if (diff < TIME_MS.SECOND) return `${diff}ms`;
+    if (diff < TIME_MS.MINUTE) return `${(diff / TIME_MS.SECOND).toFixed(2)}s`;
+    return `${(diff / TIME_MS.MINUTE).toFixed(2)}m`;
 };
 
 const StatusIcon = ({ status }: { status: string }) => {
     switch (status) {
-        case 'COMPLETED': return <CheckCircle size={16} className="text-emerald-500" />;
-        case 'FAILED': return <AlertCircle size={16} className="text-red-500" />;
-        case 'ACTIVE': return <PlayCircle size={16} className="text-blue-500 animate-pulse" />;
-        case 'STOPPED':
-        case 'CANCELLED': return <Ban size={16} className="text-slate-400" />;
-        default: return <Clock size={16} className="text-slate-400" />;
+        case WORKFLOW_STATUS.COMPLETED: return <CheckCircle size={16} className={STATUS_COLORS[WORKFLOW_STATUS.COMPLETED]} />;
+        case WORKFLOW_STATUS.FAILED: return <AlertCircle size={16} className={STATUS_COLORS[WORKFLOW_STATUS.FAILED]} />;
+        case WORKFLOW_STATUS.ACTIVE: return <PlayCircle size={16} className={STATUS_COLORS[WORKFLOW_STATUS.ACTIVE]} />;
+        case WORKFLOW_STATUS.STOPPED:
+        case WORKFLOW_STATUS.CANCELLED: return <Ban size={16} className={STATUS_COLORS[WORKFLOW_STATUS.STOPPED]} />;
+        default: return <Clock size={16} className={STATUS_COLORS.DEFAULT} />;
     }
 };
 
 export const ExecutionHistoryModal: React.FC<ExecutionHistoryModalProps> = ({ isOpen, onClose, workflowId }) => {
     const [runs, setRuns] = useState<WorkflowRun[]>([]);
     const [loading, setLoading] = useState(false);
+    const [expandedRunId, setExpandedRunId] = useState<string | null>(null);
+    const [nodeResults, setNodeResults] = useState<Record<string, NodeExecutionResult[]>>({});
+    const [loadingNodes, setLoadingNodes] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
         if (isOpen && workflowId) {
@@ -50,8 +55,33 @@ export const ExecutionHistoryModal: React.FC<ExecutionHistoryModalProps> = ({ is
                 }
             };
             fetchRuns();
+            setExpandedRunId(null);
+            setNodeResults({});
         }
     }, [isOpen, workflowId]);
+
+    const toggleRun = async (runId: string) => {
+        if (expandedRunId === runId) {
+            setExpandedRunId(null);
+            return;
+        }
+
+        setExpandedRunId(runId);
+
+        if (!nodeResults[runId]) {
+            setLoadingNodes(prev => ({ ...prev, [runId]: true }));
+            try {
+                const { HttpWorkflowService } = await import('../../../services/HttpWorkflowService');
+                const service = new HttpWorkflowService();
+                const data = await service.getRunNodeExecutions(runId);
+                setNodeResults(prev => ({ ...prev, [runId]: data }));
+            } catch (e) {
+                console.error("Failed to load node results", e);
+            } finally {
+                setLoadingNodes(prev => ({ ...prev, [runId]: false }));
+            }
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -81,28 +111,47 @@ export const ExecutionHistoryModal: React.FC<ExecutionHistoryModalProps> = ({ is
                     ) : (
                         <div className="space-y-3">
                             {runs.map(run => (
-                                <div key={run.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
-                                    <div className="flex items-center gap-4">
-                                        <StatusIcon status={run.status} />
-                                        <div>
-                                            <div className="text-sm font-medium text-slate-900">
-                                                {new Date(run.startTime).toLocaleString()}
+                                <div key={run.id} className="bg-white rounded-lg border border-slate-200 shadow-sm transition-all overflow-hidden">
+                                    <div
+                                        className="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50"
+                                        onClick={() => toggleRun(run.id)}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <StatusIcon status={run.status} />
+                                            <div>
+                                                <div className="text-sm font-medium text-slate-900">
+                                                    {new Date(run.startTime).toLocaleString()}
+                                                </div>
+                                                <div className="text-xs text-slate-500 flex gap-2">
+                                                    <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-mono">
+                                                        {run.triggerType}
+                                                    </span>
+                                                    <span>Duration: {formatDuration(run.startTime, run.endTime)}</span>
+                                                </div>
                                             </div>
-                                            <div className="text-xs text-slate-500 flex gap-2">
-                                                <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-mono">
-                                                    {run.triggerType}
-                                                </span>
-                                                <span>Duration: {formatDuration(run.startTime, run.endTime)}</span>
+                                        </div>
+
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-right text-xs text-slate-400">
+                                                <div>ID: {run.id.substring(0, 8)}...</div>
+                                                {run.totalExecutions > 1 && (
+                                                    <div className="text-orange-500 font-medium">{run.totalExecutions} attempts</div>
+                                                )}
                                             </div>
+                                            {expandedRunId === run.id ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
                                         </div>
                                     </div>
 
-                                    <div className="text-right text-xs text-slate-400">
-                                        <div>ID: {run.id.substring(0, 8)}...</div>
-                                        {run.totalExecutions > 1 && (
-                                            <div className="text-orange-500 font-medium">{run.totalExecutions} attempts</div>
-                                        )}
-                                    </div>
+                                    {/* Expanded Details */}
+                                    {expandedRunId === run.id && (
+                                        <div className="border-t border-slate-100">
+                                            {loadingNodes[run.id] ? (
+                                                <div className="p-4 text-center text-xs text-slate-400">Loading details...</div>
+                                            ) : (
+                                                <RunDetailsView nodeResults={nodeResults[run.id] || []} />
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

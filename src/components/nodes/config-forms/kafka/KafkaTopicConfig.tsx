@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { Loader2, Plus, RefreshCw } from 'lucide-react';
 import React, { useState } from 'react';
+import { Loader2, Plus, RefreshCw } from 'lucide-react';
 import { NodeConfig } from '../../../../types/workflow.interfaces';
 
 interface KafkaTopicConfigProps {
@@ -29,16 +28,16 @@ export const KafkaTopicConfig: React.FC<KafkaTopicConfigProps> = ({
 
     const handleCreateTopic = async (name: string, partitions: number) => {
         try {
-            const response = await axios.post('/api/kafka/topics/create', {
+            const { KafkaService } = await import('../../../../services/KafkaService');
+            const service = new KafkaService();
+            await service.createTopic({
                 ...buildConnectionConfig(),
                 topicName: name,
                 partitions,
                 replicationFactor: 1
             });
-            if (response.data.success) {
-                onTopicCreated(name);
-                onChange('topic', name);
-            }
+            onTopicCreated(name);
+            onChange('topic', name);
         } catch (e: any) {
             console.error('Failed to create topic', e);
         }

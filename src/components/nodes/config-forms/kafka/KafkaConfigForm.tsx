@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { KafkaMode, NodeConfig } from '../../../../types/workflow.interfaces';
 import { KafkaBrokerConfig } from './KafkaBrokerConfig';
@@ -42,22 +41,20 @@ const KafkaConfigForm: React.FC<KafkaConfigFormProps> = ({ config, onChange }) =
         setClusterInfo(null);
 
         try {
-            const response = await axios.post('/api/kafka/test-connection', buildConnectionConfig());
-            if (response?.data?.success) {
-                setConnectionStatus('success');
-                setClusterInfo({
-                    clusterId: response?.data?.data?.clusterId,
-                    brokers: response?.data?.data?.brokers
-                });
-                // Auto-load topics on successful connection
-                loadTopics();
-            } else {
-                setConnectionStatus('error');
-                setConnectionError(response.data?.error || 'Connection failed');
-            }
+            const { KafkaService } = await import('../../../../services/KafkaService');
+            const service = new KafkaService();
+            const data = await service.testConnection(buildConnectionConfig());
+
+            setConnectionStatus('success');
+            setClusterInfo({
+                clusterId: data.clusterId,
+                brokers: data.brokers
+            });
+            // Auto-load topics on successful connection
+            loadTopics();
         } catch (e: any) {
             setConnectionStatus('error');
-            setConnectionError(e.response?.data?.error || e.message || 'Connection failed');
+            setConnectionError(e.message || 'Connection failed');
         }
     };
 
@@ -65,10 +62,10 @@ const KafkaConfigForm: React.FC<KafkaConfigFormProps> = ({ config, onChange }) =
     const loadTopics = async () => {
         setLoadingTopics(true);
         try {
-            const response = await axios.post('/api/kafka/topics', buildConnectionConfig());
-            if (response?.data?.success) {
-                setTopics(response?.data?.data || []);
-            }
+            const { KafkaService } = await import('../../../../services/KafkaService');
+            const service = new KafkaService();
+            const topics = await service.getTopics(buildConnectionConfig());
+            setTopics(topics);
         } catch (e) {
             console.error('Failed to load topics', e);
         } finally {

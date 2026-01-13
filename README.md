@@ -1,16 +1,72 @@
-# React + Vite
+# Workflow Studio UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The modern, responsive frontend for Workflow Engine, built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎨 **Visual Workflow Builder**: Drag-and-drop interface using ReactFlow.
+- 📊 **Execution History**: Detailed history of workflow runs.
+- 🔍 **Node Observability**: Inspect inputs, outputs, and timing for every step of a run.
+- 🔌 **Dynamic Configuration**: Forms for configuring HTTP, Kafka, and other integrations.
+- 🚀 **Modern Stack**: React 18, TypeScript, TailwindCSS, Lucide Icons.
 
-## React Compiler
+## Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This project follows strictly typed, scalable patterns:
 
-## Expanding the ESLint configuration
+- **Service Pattern**: All API calls are centralized in `src/services` (`HttpWorkflowService`, `KafkaService`). Direct `axios` usage in components is prohibited.
+- **Environment Config**: Type-safe configuration via `src/config/env.ts` and `.env`.
+- **Constants**: Centralized constants in `src/config/constants.ts` (Status, Colors, Time).
+- **Component Composition**: Small, focused components (e.g., `RunDetailsView`, `KafkaTopicConfig`).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Configure Environment:
+Create `.env` file (or use default):
+```env
+VITE_API_BASE_URL=/api
+```
+
+### Running Locally
+
+Start the development server:
+```bash
+npm run dev
+```
+
+Access the UI at `http://localhost:5173`.
+
+### Building for Production
+
+Build the type-safe production bundle:
+```bash
+npm run build
+```
+
+Artifacts will be generated in `dist/`.
+
+## Project Structure
+
+```
+src/
+├── components/     # UI Components
+│   ├── layout/     # App Layout
+│   ├── nodes/      # ReactFlow Nodes & Config Forms
+│   └── workflow/   # Workflow List, History, Details
+├── config/         # App Configuration (Env, Constants)
+├── services/       # API Clients (HttpWorkflowService, KafkaService)
+├── types/          # TypeScript Interfaces
+└── utils/          # Helper functions
+```

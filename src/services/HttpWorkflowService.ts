@@ -3,6 +3,8 @@ import { IWorkflowService } from './IWorkflowService';
 import { Workflow, WorkflowSummary, ExecutionResult } from '../types/workflow.interfaces';
 import { ApiResponse } from '../types/api.interfaces';
 
+import { env } from '../config/env';
+
 /**
  * HTTP-based implementation of WorkflowService.
  * Communicates with the Spring Boot backend via REST.
@@ -11,7 +13,7 @@ export class HttpWorkflowService implements IWorkflowService {
 
     private readonly baseUrl: string;
 
-    constructor(baseUrl: string = '/api') {
+    constructor(baseUrl: string = env.API_BASE_URL) {
         this.baseUrl = baseUrl;
     }
 
@@ -120,6 +122,16 @@ export class HttpWorkflowService implements IWorkflowService {
         } catch (e: any) {
             console.error("Failed to get executions for run", e);
             throw new Error(e.response?.data?.message || "Failed to get executions for run");
+        }
+    }
+
+    async getRunNodeExecutions(runId: string): Promise<import('../types/workflow.interfaces').NodeExecutionResult[]> {
+        try {
+            const response = await axios.get<ApiResponse<import('../types/workflow.interfaces').NodeExecutionResult[]>>(`${this.baseUrl}/workflows/runs/${runId}/nodes`);
+            return response.data.data;
+        } catch (e: any) {
+            console.error("Failed to get node executions", e);
+            throw new Error(e.response?.data?.message || "Failed to get node executions");
         }
     }
 }

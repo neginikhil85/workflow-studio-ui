@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { Workflow } from '../../../types/workflow.interfaces';
 import { WorkflowListHeader } from './WorkflowListHeader';
@@ -20,8 +19,21 @@ const WorkflowListModal: React.FC<WorkflowListModalProps> = ({ isOpen, onClose, 
     const fetchWorkflows = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('/api/workflows');
-            setWorkflows(response.data.data);
+            const { HttpWorkflowService } = await import('../../../services/HttpWorkflowService');
+            const service = new HttpWorkflowService();
+            const workflowList = await service.getWorkflowList();
+
+            // Map WorkflowSummary to Workflow type for the list (since list only needs basic info)
+            // Note: In a real app we might want separate types, but for now we cast or map
+            const fullWorkflows = workflowList.map(s => ({
+                id: s.id,
+                name: s.name,
+                description: s.description,
+                nodes: [],
+                edges: []
+            } as Workflow));
+
+            setWorkflows(fullWorkflows);
         } catch (error) {
             console.error("Error fetching workflows:", error);
         } finally {
@@ -49,11 +61,18 @@ const WorkflowListModal: React.FC<WorkflowListModalProps> = ({ isOpen, onClose, 
         if (!newName || newName === wf.name) return;
 
         try {
-            const response = await axios.get(`/api/workflows/${wf.id}`);
-            const fullWorkflow = response.data.data;
+            const { HttpWorkflowService } = await import('../../../services/HttpWorkflowService');
+            const service = new HttpWorkflowService();
+
+            // 1. Load full workflow
+            const fullWorkflow = await service.loadWorkflow(wf.id!);
+
+            // 2. Update name
             fullWorkflow.name = newName;
 
-            await axios.put(`/api/workflows/${wf.id}`, fullWorkflow);
+            // 3. Save
+            await service.saveWorkflow(fullWorkflow);
+
             fetchWorkflows();
         } catch (error) {
             console.error("Error renaming workflow:", error);

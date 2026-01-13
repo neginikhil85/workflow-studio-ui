@@ -114,3 +114,17 @@ export interface HeaderPersistence {
     saveWorkflow: () => void;
     clearWorkflow: () => void;
 }
+
+export interface NodeExecutionResult {
+    id: string;
+    runId: string;
+    executionId: string;
+    nodeId: string;
+    status: 'SUCCESS' | 'FAILURE' | 'PENDING';
+    inputData: unknown;
+    outputData: unknown;
+    errorMessage?: string;
+    startedAt: string;
+    completedAt?: string;
+    duration: number;
+}
