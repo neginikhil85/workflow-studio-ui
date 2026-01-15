@@ -59,6 +59,7 @@ const WorkflowLayout: React.FC = () => {
                     isOpen={isHistoryOpen}
                     onClose={() => setIsHistoryOpen(false)}
                     workflowId={state.workflowId}
+                    nodes={state.nodes}
                 />
             </div>
         </div>

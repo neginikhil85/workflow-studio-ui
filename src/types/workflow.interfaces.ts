@@ -120,9 +120,8 @@ export interface NodeExecutionResult {
     runId: string;
     executionId: string;
     nodeId: string;
-    status: 'SUCCESS' | 'FAILURE' | 'PENDING';
-    inputData: unknown;
-    outputData: unknown;
+    status: 'SUCCESS' | 'FAILURE' | 'SKIPPED';
+    executionDetails: any;
     errorMessage?: string;
     startedAt: string;
     completedAt?: string;
