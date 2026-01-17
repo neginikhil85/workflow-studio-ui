@@ -3,10 +3,11 @@ import { toast } from 'sonner';
 import { useServices } from '../../contexts/ServiceContext';
 
 import { WorkflowState } from './useWorkflowState';
+import { hasContinuousNode } from '../../config/nodes/node.classification';
 
 export const useWorkflowExecution = (state: WorkflowState) => {
     const { workflowService } = useServices();
-    const { workflowId, setNodes } = state;
+    const { workflowId, setNodes, nodes } = state;
     const [isExecuting, setIsExecuting] = useState(false);
     const [status, setStatus] = useState<string>('IDLE');
 
@@ -19,7 +20,10 @@ export const useWorkflowExecution = (state: WorkflowState) => {
                 const s = await workflowService.getWorkflowStatus(workflowId);
                 setIsExecuting(s.isRunning);
                 setStatus(s.status);
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                // Silent failure for polling
+                console.error(e);
+            }
         };
 
         checkStatus();
@@ -33,6 +37,8 @@ export const useWorkflowExecution = (state: WorkflowState) => {
             return;
         }
 
+        const isContinuous = hasContinuousNode(nodes);
+
         // Reset styles
         setNodes(nds => nds.map(n => ({
             ...n,
@@ -41,6 +47,11 @@ export const useWorkflowExecution = (state: WorkflowState) => {
 
         setIsExecuting(true);
         setStatus('RUNNING');
+
+        // Immediate feedback for continuous workflows
+        if (isContinuous) {
+            toast.success('Execution started');
+        }
 
         try {
             const result = await workflowService.executeWorkflow(workflowId);
@@ -60,8 +71,12 @@ export const useWorkflowExecution = (state: WorkflowState) => {
                     }
                     : n
             ));
-            toast.success('Execution completed!');
-            setStatus('COMPLETED');
+
+            // Only show completion message for one-time workflows
+            if (!isContinuous) {
+                toast.success('Execution completed!');
+                setStatus('COMPLETED');
+            }
         } catch (error: any) {
             console.error("Execution failed:", error);
             toast.error(error.message || 'Execution failed');
