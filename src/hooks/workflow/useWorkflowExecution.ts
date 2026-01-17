@@ -84,14 +84,19 @@ export const useWorkflowExecution = (state: WorkflowState) => {
             setStatus('FAILED');
         }
 
-        // Refresh status shortly after to catch async updates (like cron)
-        setTimeout(async () => {
-            try {
-                const s = await workflowService.getWorkflowStatus(workflowId);
-                setIsExecuting(s.isRunning);
-                setStatus(s.status);
-            } catch (e) { }
-        }, 1000);
+        // Refresh status shortly after only for continuous workflows (to catch async updates like cron/kafka)
+        if (isContinuous) {
+            setTimeout(async () => {
+                try {
+                    const s = await workflowService.getWorkflowStatus(workflowId);
+                    setIsExecuting(s.isRunning);
+                    setStatus(s.status);
+                } catch (e) { }
+            }, 1000);
+        } else {
+            // For one-time workflows, ensure we stop executing state
+            setIsExecuting(false);
+        }
     };
 
     const stopExecution = async () => {
