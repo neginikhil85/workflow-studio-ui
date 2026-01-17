@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { useServices } from '../../contexts/ServiceContext';
 
 import { WorkflowState } from './useWorkflowState';
-import { hasContinuousNode } from '../../config/nodes/node.classification';
+
 
 export const useWorkflowExecution = (state: WorkflowState) => {
     const { workflowService } = useServices();
@@ -84,19 +84,17 @@ export const useWorkflowExecution = (state: WorkflowState) => {
             setStatus('FAILED');
         }
 
-        // Refresh status shortly after only for continuous workflows (to catch async updates like cron/kafka)
-        if (isContinuous) {
-            setTimeout(async () => {
-                try {
-                    const s = await workflowService.getWorkflowStatus(workflowId);
-                    setIsExecuting(s.isRunning);
-                    setStatus(s.status);
-                } catch (e) { }
-            }, 1000);
-        } else {
-            // For one-time workflows, ensure we stop executing state
-            setIsExecuting(false);
-        }
+        // Force an immediate status check to synchronize quickly
+        try {
+            const s = await workflowService.getWorkflowStatus(workflowId);
+            setIsExecuting(s.isRunning);
+            setStatus(s.status);
+
+            // If backend already says completed, show toast
+            if (s.status === 'COMPLETED') {
+                toast.success('Execution completed!');
+            }
+        } catch (e) { }
     };
 
     const stopExecution = async () => {
