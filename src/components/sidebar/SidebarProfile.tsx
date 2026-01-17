@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, LogOut, User as UserIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const SidebarProfile: React.FC = () => {
@@ -42,7 +43,13 @@ export const SidebarProfile: React.FC = () => {
                             <p className="text-xs text-slate-500 truncate">{user.email}</p>
                         </div>
 
-                        <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 transition-colors">
+                        <button
+                            onClick={() => {
+                                toast.info('Profile settings coming soon!');
+                                setIsOpen(false);
+                            }}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 transition-colors"
+                        >
                             <UserIcon size={14} />
                             Profile
                         </button>
