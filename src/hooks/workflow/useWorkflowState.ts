@@ -12,6 +12,7 @@ export const useWorkflowState = () => {
     // Workflow Identity
     const [workflowId, setWorkflowId] = useState<string | null>(null);
     const [workflowName, setWorkflowName] = useState("My Workflow");
+    const [workflowDescription, setWorkflowDescription] = useState("");
 
     // UI/Modal State
     const [selectedNode, setSelectedNode] = useState<WorkflowNode | null>(null);
@@ -24,6 +25,7 @@ export const useWorkflowState = () => {
         edges, setEdges, onEdgesChange,
         workflowId, setWorkflowId,
         workflowName, setWorkflowName,
+        workflowDescription, setWorkflowDescription,
         selectedNode, setSelectedNode,
         isModalOpen, setIsModalOpen
     };

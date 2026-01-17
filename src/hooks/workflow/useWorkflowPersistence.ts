@@ -20,7 +20,9 @@ export const useWorkflowPersistence = (
         nodes,
         edges,
         workflowId,
-        workflowName
+        workflowName,
+        workflowDescription,
+        setWorkflowDescription
     } = state;
 
     const loadWorkflowById = async (id: string) => {
@@ -28,6 +30,7 @@ export const useWorkflowPersistence = (
             const workflow = await workflowService.loadWorkflow(id);
             setWorkflowId(workflow.id);
             setWorkflowName(workflow.name || "My Workflow");
+            setWorkflowDescription(workflow.description || "");
 
             const loadedNodes: Node[] = workflow.nodes.map((n: any) => ({
                 id: n.id,
@@ -74,7 +77,7 @@ export const useWorkflowPersistence = (
             const payload = {
                 id: workflowId,
                 name: workflowName,
-                description: "Created via Workflow Studio",
+                description: workflowDescription,
                 startNodeId: startNode?.id || null,
                 nodes: nodes.map(n => ({
                     id: n.id,
@@ -98,11 +101,12 @@ export const useWorkflowPersistence = (
         }
     };
 
-    const createBlankWorkflow = (name?: string) => {
+    const createBlankWorkflow = (name?: string, description?: string) => {
         setNodes([]);
         setEdges([]);
         setWorkflowId(null);
         setWorkflowName(name || `New Workflow ${new Date().toLocaleDateString()}`);
+        setWorkflowDescription(description || "");
         setIsExecuting(false);
         localStorage.removeItem('workflow-engine-active-id');
     };

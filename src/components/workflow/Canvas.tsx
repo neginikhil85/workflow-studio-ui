@@ -37,7 +37,7 @@ interface CanvasProps {
 
 const Canvas: React.FC<CanvasProps> = ({ state, actions }) => {
     return (
-        <div className="flex-1 h-full bg-slate-50 relative" ref={state.reactFlowWrapper}>
+        <div className="flex-1 h-full bg-slate-80 relative" ref={state.reactFlowWrapper}>
             <ReactFlow
                 nodes={state.nodes}
                 edges={state.edges}
@@ -56,7 +56,7 @@ const Canvas: React.FC<CanvasProps> = ({ state, actions }) => {
                 nodeTypes={NODE_TYPE_REGISTRY}
                 proOptions={{ hideAttribution: true }}
             >
-                <Background color="#94a3b8" gap={20} size={1} variant={BackgroundVariant.Dots} className="opacity-40" />
+                <Background color="#000000ff" gap={20} size={1} variant={BackgroundVariant.Dots} className="opacity-40" />
                 <Controls className="!bg-white !border-slate-200 !shadow-xl !rounded-xl overflow-hidden [&>button]:!border-b-slate-100 [&>button]:!text-slate-600 hover:[&>button]:!bg-slate-50 !m-4" />
                 <MiniMap
                     style={{ background: '#fff', height: 120, width: 200, borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}

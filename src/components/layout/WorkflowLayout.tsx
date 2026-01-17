@@ -52,7 +52,7 @@ const WorkflowLayout: React.FC = () => {
                             await axios.delete(`/api/workflows/${id}`);
                         } catch (e) { console.error(e) }
                     }}
-                    onCreate={(name) => persistence.createNewWorkflow(name)}
+                    onCreate={(data) => persistence.createNewWorkflow(data.name, data.description)}
                 />
 
                 <ExecutionHistoryModal

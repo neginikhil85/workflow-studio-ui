@@ -3,18 +3,20 @@ import { Loader2 } from 'lucide-react';
 import { Workflow } from '../../../types/workflow.interfaces';
 import { WorkflowListHeader } from './WorkflowListHeader';
 import { WorkflowListItem } from './WorkflowListItem';
+import { CreateWorkflowModal } from './CreateWorkflowModal';
 
 interface WorkflowListModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSelect: (workflow: Workflow) => void;
     onDelete: (id: string) => void;
-    onCreate: (name: string) => void;
+    onCreate: (data: { name: string, description: string }) => void;
 }
 
 const WorkflowListModal: React.FC<WorkflowListModalProps> = ({ isOpen, onClose, onSelect, onDelete, onCreate }) => {
     const [workflows, setWorkflows] = useState<Workflow[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const fetchWorkflows = async () => {
         setLoading(true);
@@ -48,11 +50,12 @@ const WorkflowListModal: React.FC<WorkflowListModalProps> = ({ isOpen, onClose, 
     }, [isOpen]);
 
     const handleCreate = () => {
-        const name = prompt("Enter workflow name:", "New Workflow");
-        if (name) {
-            onCreate(name);
-            onClose();
-        }
+        setIsCreateModalOpen(true);
+    };
+
+    const handleCreateSubmit = (data: { name: string, description: string }) => {
+        onCreate(data);
+        setIsCreateModalOpen(false);
     };
 
     const handleRename = async (wf: Workflow, e: React.MouseEvent) => {
@@ -119,8 +122,15 @@ const WorkflowListModal: React.FC<WorkflowListModalProps> = ({ isOpen, onClose, 
                     )}
                 </div>
             </div>
+
+            <CreateWorkflowModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onCreate={handleCreateSubmit}
+            />
         </div>
     );
+
 };
 
 export default WorkflowListModal;
