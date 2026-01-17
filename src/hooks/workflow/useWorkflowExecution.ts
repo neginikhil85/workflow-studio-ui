@@ -7,7 +7,7 @@ import { WorkflowState } from './useWorkflowState';
 
 export const useWorkflowExecution = (state: WorkflowState) => {
     const { workflowService } = useServices();
-    const { workflowId, setNodes, nodes } = state;
+    const { workflowId, setNodes } = state;
     const [isExecuting, setIsExecuting] = useState(false);
     const [status, setStatus] = useState<string>('IDLE');
 
