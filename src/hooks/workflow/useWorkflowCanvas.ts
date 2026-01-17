@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { addEdge, Connection, Node, XYPosition } from 'reactflow';
 import { WorkflowNode, NodeConfig } from '../../types/workflow.interfaces';
 import { WorkflowState } from './useWorkflowState';
+import { SIDEBAR_SECTIONS } from '../../components/sidebar/sidebar.config';
 
 export const useWorkflowCanvas = (state: WorkflowState) => {
     const {
@@ -56,12 +57,22 @@ export const useWorkflowCanvas = (state: WorkflowState) => {
             y: event.clientY,
         });
 
+        // Resolve Label from Sidebar Config
+        let label = type.split('_')[1] || 'Node';
+        for (const section of SIDEBAR_SECTIONS) {
+            const item = section.items.find(i => i.nodeType === type);
+            if (item) {
+                label = item.label;
+                break;
+            }
+        }
+
         const newNode: WorkflowNode = {
             id: `node_${Date.now()}`,
             type,
             position,
             data: {
-                label: type.split('_')[1] || 'Node',
+                label,
                 nodeType: type,
                 config: {},
                 onDuplicate: duplicateNode

@@ -15,6 +15,7 @@ export const NODE_STYLES: NodeStyleRegistry = {
   // Triggers
   [TriggerNodeType.WEBHOOK]: { icon: Bell, color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100" },
   [TriggerNodeType.CRON]: { icon: Clock, color: "text-violet-600", bg: "bg-violet-50", border: "border-violet-100" },
+  [TriggerNodeType.KAFKA]: { icon: KafkaIcon, color: "text-fuchsia-600", bg: "bg-fuchsia-50", border: "border-fuchsia-100" },
 
   // Integration
   [IntegrationNodeType.HTTP_CALL]: { icon: Globe, color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100" },

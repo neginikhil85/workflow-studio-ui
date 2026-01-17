@@ -9,6 +9,7 @@ interface KafkaBrokerConfigProps {
     connectionError: string;
     clusterInfo: { clusterId?: string; brokers?: string[] } | null;
     onTestConnection: () => void;
+    accentColor?: 'violet' | 'fuchsia';
 }
 
 
@@ -18,8 +19,14 @@ export const KafkaBrokerConfig: React.FC<KafkaBrokerConfigProps> = ({
     connectionStatus,
     connectionError,
     clusterInfo,
-    onTestConnection
+    onTestConnection,
+    accentColor = 'violet'
 }) => {
+    const focusRing = accentColor === 'fuchsia' ? 'focus:ring-fuchsia-500/50' : 'focus:ring-violet-500/50';
+    const btnClass = accentColor === 'fuchsia'
+        ? 'bg-fuchsia-600 hover:bg-fuchsia-700 disabled:bg-fuchsia-400 shadow-fuchsia-200'
+        : 'bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 shadow-violet-200';
+
     return (
         <div className="space-y-5">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase">
@@ -34,14 +41,14 @@ export const KafkaBrokerConfig: React.FC<KafkaBrokerConfigProps> = ({
                         value={config.bootstrapServers || ''}
                         onChange={(e) => onChange('bootstrapServers', e.target.value)}
                         placeholder="localhost:9092"
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                        className={`w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 ${focusRing}`}
                     />
                 </div>
                 <div className="flex items-end">
                     <button
                         onClick={onTestConnection}
                         disabled={connectionStatus === 'testing'}
-                        className="px-4 py-2 bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-md shadow-violet-200"
+                        className={`px-4 py-2 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-md ${btnClass}`}
                     >
                         {connectionStatus === 'testing' ? (
                             <Loader2 size={14} className="animate-spin" />

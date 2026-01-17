@@ -22,10 +22,24 @@ export const NodeHeader: React.FC<NodeHeaderProps> = memo(({ label, nodeType }) 
                         {label}
                     </h3>
                     <p className="text-[10px] text-slate-500 font-medium mt-0.5 truncate">
-                        {nodeType.split('_')[1] || 'Node'}
+                        {formatNodeType(nodeType)}
                     </p>
                 </div>
             </div>
         </div>
     );
 });
+
+const formatNodeType = (nodeType: string): string => {
+    // Generic Logic: Remove prefix (CategoryNodeType) and display the rest
+    // e.g. TriggerNodeType_KAFKA -> KAFKA
+    // e.g. IntegrationNodeType_HTTP_CALL -> HTTP CALL
+    const parts = nodeType.split('_');
+    if (parts.length > 1) {
+        return parts.slice(1).join(' ').toUpperCase();
+    }
+    // Fallback for types without underscore (legacy or custom)
+    return nodeType.toUpperCase();
+};
+
+

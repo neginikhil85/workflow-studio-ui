@@ -36,6 +36,7 @@ export interface NodeConfig {
     message?: string;
     consumerGroup?: string;
     pollTimeoutMs?: number;
+    autoOffsetReset?: 'latest' | 'earliest';
 }
 
 export interface NodeData {

@@ -80,5 +80,22 @@ export const NodeConfigPreview: React.FC<NodeConfigPreviewProps> = ({ nodeType, 
         );
     }
 
+    if (nodeType === TriggerNodeType.KAFKA) {
+        return (
+            <div className="flex flex-col gap-2 mt-2">
+                {config.topic ? (
+                    <div className="flex items-center gap-2 px-2 py-1.5 bg-slate-50 rounded-md border border-slate-100/50">
+                        <span className="text-[9px] font-bold text-fuchsia-600 uppercase tracking-wider">LISTENING TOPIC</span>
+                        <span className="text-[10px] text-slate-600 truncate font-mono tracking-tight opacity-80" title={config.topic}>
+                            {config.topic}
+                        </span>
+                    </div>
+                ) : (
+                    <div className="px-2 py-1.5 text-[10px] text-slate-400 italic">Configure Kafka trigger...</div>
+                )}
+            </div>
+        );
+    }
+
     return null;
 };

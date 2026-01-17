@@ -14,6 +14,7 @@ export const NODE_TYPE_REGISTRY: NodeTypeRegistry = {
     // Triggers
     [TriggerNodeType.WEBHOOK]: CardNode,
     [TriggerNodeType.CRON]: CardNode,
+    [TriggerNodeType.KAFKA]: CardNode,
 
     // Integration
     [IntegrationNodeType.HTTP_CALL]: CardNode,

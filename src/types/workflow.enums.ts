@@ -10,6 +10,7 @@ export enum WorkflowNodeCategory {
 export enum TriggerNodeType {
     WEBHOOK = 'TriggerNodeType_WEBHOOK',
     CRON = 'TriggerNodeType_CRON',
+    KAFKA = 'TriggerNodeType_KAFKA',
 }
 
 export enum IntegrationNodeType {

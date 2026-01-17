@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
-import { WorkflowNode, NodeConfig } from '../../../types/workflow.interfaces';
+import { WorkflowNode, NodeConfig, KafkaMode } from '../../../types/workflow.interfaces';
 import { ConfigModalHeader } from './ConfigModalHeader';
 import { ConfigModalFooter } from './ConfigModalFooter';
 
@@ -50,6 +50,8 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ node, isOpen, onClose, onSave
                 return <HttpConfigForm config={config} onChange={handleConfigChange} />;
             case 'IntegrationNodeType_KAFKA':
                 return <KafkaConfigForm config={config} onChange={handleConfigChange} />;
+            case 'TriggerNodeType_KAFKA':
+                return <KafkaConfigForm config={config} onChange={handleConfigChange} fixedMode={KafkaMode.CONSUMER} accentColor="fuchsia" />;
             case 'TriggerNodeType_CRON':
                 return <CronConfigForm config={config} onChange={handleConfigChange} />;
             case 'TriggerNodeType_WEBHOOK':

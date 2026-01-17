@@ -5,15 +5,18 @@ import { KafkaSecurityProtocol, NodeConfig } from '../../../../types/workflow.in
 interface KafkaSecurityConfigProps {
     config: NodeConfig;
     onChange: (key: string, value: any) => void;
+    accentColor?: 'violet' | 'fuchsia';
 }
 
 
-export const KafkaSecurityConfig: React.FC<KafkaSecurityConfigProps> = ({ config, onChange }) => {
+export const KafkaSecurityConfig: React.FC<KafkaSecurityConfigProps> = ({ config, onChange, accentColor = 'violet' }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const securityProtocol = (config.securityProtocol || 'PLAINTEXT') as KafkaSecurityProtocol;
     const showSSL = securityProtocol === 'SSL' || securityProtocol === 'SASL_SSL';
     const showSASL = securityProtocol === 'SASL_PLAINTEXT' || securityProtocol === 'SASL_SSL';
+
+    const ringClass = accentColor === 'fuchsia' ? 'focus:ring-fuchsia-500/50' : 'focus:ring-violet-500/50';
 
     return (
         <div className="border border-slate-200 rounded-lg overflow-hidden">
@@ -35,7 +38,7 @@ export const KafkaSecurityConfig: React.FC<KafkaSecurityConfigProps> = ({ config
                         <select
                             value={securityProtocol}
                             onChange={(e) => onChange('securityProtocol', e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                            className={`w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 ${ringClass}`}
                         >
                             <option value="PLAINTEXT">PLAINTEXT</option>
                             <option value="SSL">SSL</option>
