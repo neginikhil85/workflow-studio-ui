@@ -37,7 +37,7 @@ export const useWorkflowExecution = (state: WorkflowState) => {
             return;
         }
 
-        const isContinuous = hasContinuousNode(nodes);
+
 
         // Reset styles
         setNodes(nds => nds.map(n => ({
