@@ -2,6 +2,15 @@ import { Node } from 'reactflow';
 import { KafkaSecurityProtocol, SaslMechanism, KafkaMode } from './workflow.enums';
 export { KafkaSecurityProtocol, SaslMechanism, KafkaMode };
 
+export interface User {
+    id: string;
+    email: string;
+    name: string;
+    createdAt?: string;
+    updatedAt?: string;
+    active: boolean;
+}
+
 export interface NodeConfig {
     url?: string;
     method?: string;
@@ -59,6 +68,7 @@ export interface Workflow {
     id: string | null;
     name: string;
     description: string;
+    ownerId?: string;
     nodes: WorkflowNodeDefinition[];
     edges: WorkflowEdge[];
 }
