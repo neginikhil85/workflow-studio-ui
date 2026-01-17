@@ -47,11 +47,7 @@ export const useWorkflowExecution = (state: WorkflowState) => {
 
         setIsExecuting(true);
         setStatus('RUNNING');
-
-        // Immediate feedback for continuous workflows
-        if (isContinuous) {
-            toast.success('Execution started');
-        }
+        toast.info('Execution started...');
 
         try {
             const result = await workflowService.executeWorkflow(workflowId);
@@ -72,11 +68,8 @@ export const useWorkflowExecution = (state: WorkflowState) => {
                     : n
             ));
 
-            // Only show completion message for one-time workflows
-            if (!isContinuous) {
-                toast.success('Execution completed!');
-                setStatus('COMPLETED');
-            }
+            // Note: We don't manually set COMPLETED status here anymore.
+            // We rely on the polling effect to update status from backend.
         } catch (error: any) {
             console.error("Execution failed:", error);
             toast.error(error.message || 'Execution failed');
