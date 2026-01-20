@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { env } from '../config/env';
 import { ApiResponse } from '../types/api.interfaces';
+import { API_CONFIG } from '../config/api.config';
 
 export interface KafkaClusterInfo {
     clusterId: string;
@@ -25,15 +25,10 @@ export interface CreateTopicRequest extends KafkaConnectionConfig {
 }
 
 export class KafkaService {
-    private readonly baseUrl: string;
-
-    constructor(baseUrl: string = env.API_BASE_URL) {
-        this.baseUrl = baseUrl;
-    }
 
     async testConnection(config: KafkaConnectionConfig): Promise<KafkaClusterInfo> {
         try {
-            const response = await axios.post<ApiResponse<KafkaClusterInfo>>(`${this.baseUrl}/kafka/test-connection`, config);
+            const response = await axios.post<ApiResponse<KafkaClusterInfo>>(API_CONFIG.KAFKA.TEST_CONNECTION, config);
             if (response.data.success && response.data.data) {
                 return response.data.data;
             }
@@ -46,7 +41,7 @@ export class KafkaService {
 
     async getTopics(config: KafkaConnectionConfig): Promise<string[]> {
         try {
-            const response = await axios.post<ApiResponse<string[]>>(`${this.baseUrl}/kafka/topics`, config);
+            const response = await axios.post<ApiResponse<string[]>>(API_CONFIG.KAFKA.TOPICS, config);
             if (response.data.success) {
                 return response.data.data || [];
             }
@@ -59,7 +54,7 @@ export class KafkaService {
 
     async createTopic(request: CreateTopicRequest): Promise<void> {
         try {
-            const response = await axios.post<ApiResponse<void>>(`${this.baseUrl}/kafka/topics/create`, request);
+            const response = await axios.post<ApiResponse<void>>(API_CONFIG.KAFKA.CREATE_TOPIC, request);
             if (!response.data.success) {
                 throw new Error(response.data.message || 'Failed to create topic');
             }

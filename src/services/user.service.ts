@@ -1,21 +1,20 @@
 import axios from 'axios';
 import { User, Workflow } from '../types/workflow.interfaces';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { API_CONFIG } from '../config/api.config';
 
 export const userApi = {
     getAll: () =>
-        axios.get<{ data: User[] }>(`${API_BASE}/api/users`),
+        axios.get<{ data: User[] }>(API_CONFIG.USERS.GET_ALL),
 
     getById: (id: string) =>
-        axios.get<{ data: User }>(`${API_BASE}/api/users/${id}`),
+        axios.get<{ data: User }>(API_CONFIG.USERS.GET_BY_ID(id)),
 
     getByEmail: (email: string) =>
-        axios.get<{ data: User }>(`${API_BASE}/api/users/email/${email}`),
+        axios.get<{ data: User }>(API_CONFIG.USERS.GET_BY_EMAIL(email)),
 
     getWorkflows: (userId: string) =>
-        axios.get<{ data: Workflow[] }>(`${API_BASE}/api/users/${userId}/workflows`),
+        axios.get<{ data: Workflow[] }>(API_CONFIG.USERS.GET_WORKFLOWS(userId)),
 
     delete: (id: string) =>
-        axios.delete(`${API_BASE}/api/users/${id}`),
+        axios.delete(API_CONFIG.USERS.DELETE(id)),
 };

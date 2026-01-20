@@ -5,12 +5,14 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import WorkflowLayout from './components/layout/WorkflowLayout';
 
+import { ROUTES } from './config/routes.config';
+
 export const AppRoutes: React.FC = () => {
     return (
         <Routes>
             {/* Public routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/auth/callback" element={<AuthCallbackPage />} />
+            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallbackPage />} />
 
             {/* Protected routes */}
             <Route path="/*" element={

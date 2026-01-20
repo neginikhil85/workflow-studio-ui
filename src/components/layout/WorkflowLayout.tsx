@@ -8,6 +8,8 @@ import WorkflowListModal from '../workflow/workflow-list-modal/WorkflowListModal
 import { Toaster } from 'sonner';
 import { ExecutionHistoryModal } from '../workflow/execution-history/ExecutionHistoryModal';
 
+import { API_CONFIG } from '../../config/api.config';
+
 const WorkflowLayout: React.FC = () => {
     const [isListOpen, setIsListOpen] = useState(false);
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -49,7 +51,7 @@ const WorkflowLayout: React.FC = () => {
                     onDelete={async (id) => {
                         try {
                             const { default: axios } = await import('axios');
-                            await axios.delete(`/api/workflows/${id}`);
+                            await axios.delete(API_CONFIG.WORKFLOWS.DELETE(id));
                         } catch (e) { console.error(e) }
                     }}
                     onCreate={(data) => persistence.createNewWorkflow(data.name, data.description)}

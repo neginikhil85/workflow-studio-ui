@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { User } from '../types/workflow.interfaces';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { API_CONFIG } from '../config/api.config';
+import { ROUTES } from '../config/routes.config';
 
 // Store token in localStorage
 const TOKEN_KEY = 'workflow_studio_token';
@@ -22,7 +22,7 @@ export const authService = {
     // Get current user from token
     getCurrentUser: async (): Promise<User> => {
         const token = localStorage.getItem(TOKEN_KEY);
-        const response = await axios.get(`${API_BASE}/auth/me`, {
+        const response = await axios.get(API_CONFIG.AUTH.ME, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data.data;
@@ -30,14 +30,14 @@ export const authService = {
 
     // Validate token
     validateToken: async (token: string) => {
-        const response = await axios.post(`${API_BASE}/auth/validate`, { token });
+        const response = await axios.post(API_CONFIG.AUTH.VALIDATE, { token });
         return response.data.data;
     },
 
     // Refresh token
     refreshToken: async (): Promise<string> => {
         const token = localStorage.getItem(TOKEN_KEY);
-        const response = await axios.post(`${API_BASE}/auth/refresh`, {}, {
+        const response = await axios.post(API_CONFIG.AUTH.REFRESH, {}, {
             headers: { Authorization: `Bearer ${token}` }
         });
         const newToken = response.data.data.token;
@@ -46,13 +46,13 @@ export const authService = {
     },
 
     // OAuth login URLs
-    getGoogleLoginUrl: () => `${API_BASE}/oauth2/authorization/google`,
-    getGithubLoginUrl: () => `${API_BASE}/oauth2/authorization/github`,
+    getGoogleLoginUrl: () => API_CONFIG.AUTH.LOGIN.GOOGLE,
+    getGithubLoginUrl: () => API_CONFIG.AUTH.LOGIN.GITHUB,
 
     // Logout
     logout: () => {
         localStorage.removeItem(TOKEN_KEY);
-        window.location.href = '/login';
+        window.location.href = ROUTES.LOGIN;
     }
 };
 
