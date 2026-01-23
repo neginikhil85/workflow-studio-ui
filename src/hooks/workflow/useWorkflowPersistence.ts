@@ -70,15 +70,10 @@ export const useWorkflowPersistence = (
 
     const saveCurrentWorkflow = async (): Promise<string | null> => {
         try {
-            const targetIds = new Set(edges.map(e => e.target));
-            const rootNodes = nodes.filter(n => !targetIds.has(n.id));
-            const startNode = rootNodes.find(n => n.type?.startsWith('TriggerNodeType')) || rootNodes[0] || nodes[0];
-
             const payload = {
                 id: workflowId,
                 name: workflowName,
                 description: workflowDescription,
-                startNodeId: startNode?.id || null,
                 nodes: nodes.map(n => ({
                     id: n.id,
                     nodeType: n.type || 'default',
