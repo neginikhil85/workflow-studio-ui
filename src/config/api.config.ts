@@ -9,7 +9,9 @@ export const API_CONFIG = {
         ME: api('/auth/me'),
         VALIDATE: api('/auth/validate'),
         REFRESH: api('/auth/refresh'),
+        REGISTER: api('/auth/register'),
         LOGIN: {
+            EMAIL: api('/auth/login'),
             GOOGLE: `${API_BASE_URL}/oauth2/authorization/google`,
             GITHUB: `${API_BASE_URL}/oauth2/authorization/github`
         }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User } from '../types/workflow.interfaces';
+import { User, LoginRequest, RegisterRequest, AuthResponse } from '../types/workflow.interfaces';
 import { API_CONFIG } from '../config/api.config';
 import { ROUTES } from '../config/routes.config';
 
@@ -32,6 +32,22 @@ export const authService = {
     validateToken: async (token: string) => {
         const response = await axios.post(API_CONFIG.AUTH.VALIDATE, { token });
         return response.data.data;
+    },
+
+    // Login with email/password
+    login: async (data: LoginRequest): Promise<AuthResponse> => {
+        const response = await axios.post(API_CONFIG.AUTH.LOGIN.EMAIL, data);
+        const { token, user } = response.data.data;
+        localStorage.setItem(TOKEN_KEY, token);
+        return { token, user };
+    },
+
+    // Register
+    register: async (data: RegisterRequest): Promise<AuthResponse> => {
+        const response = await axios.post(API_CONFIG.AUTH.REGISTER, data);
+        const { token, user } = response.data.data;
+        localStorage.setItem(TOKEN_KEY, token);
+        return { token, user };
     },
 
     // Refresh token
