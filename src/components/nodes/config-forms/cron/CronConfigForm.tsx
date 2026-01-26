@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import cronstrue from 'cronstrue';
-import { NodeConfig } from '../../../../types/workflow.interfaces';
+import { CronNodeConfig } from '../../../../types/workflow.interfaces';
 import { CronTooltip } from './CronTooltip';
-import { VariableInput } from '../../../../components/common/VariableInput';
+import { VariableInput } from '../../../../components/common/variable-input/VariableInput';
 
 interface CronConfigFormProps {
-    config: NodeConfig;
+    config: CronNodeConfig;
     onChange: (key: string, value: any) => void;
 }
 

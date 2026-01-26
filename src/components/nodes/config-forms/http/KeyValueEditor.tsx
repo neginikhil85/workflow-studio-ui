@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 
-import { VariableInput } from '../../../common/VariableInput';
+import { VariableInput } from '../../../common/variable-input/VariableInput';
 
 interface KeyValueEditorProps {
     items: { key: string; value: string }[];

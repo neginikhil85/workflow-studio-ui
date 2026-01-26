@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { NodeConfig } from '../../../../types/workflow.interfaces';
+import { HttpNodeConfig } from '../../../../types/workflow.interfaces';
 import { KeyValueEditor } from './KeyValueEditor';
 import { BodyEditor } from './BodyEditor';
-import { VariableInput } from '../../../common/VariableInput';
+import { VariableInput } from '../../../common/variable-input/VariableInput';
 
 interface HttpConfigFormProps {
-    config: NodeConfig;
+    config: HttpNodeConfig;
     onChange: (key: string, value: any) => void;
 }
 
@@ -77,7 +77,7 @@ export default HttpConfigForm;
 
 /** Method dropdown and URL input */
 const MethodUrlInputs: React.FC<{
-    config: NodeConfig;
+    config: HttpNodeConfig;
     onChange: (key: string, value: any) => void;
 }> = ({ config, onChange }) => (
     <div className="flex gap-3">

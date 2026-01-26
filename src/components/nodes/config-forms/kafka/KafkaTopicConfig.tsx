@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2, Plus, RefreshCw } from 'lucide-react';
 import { NodeConfig } from '../../../../types/workflow.interfaces';
-import { VariableInput } from '../../../../components/common/VariableInput';
+import { VariableInput } from '../../../../components/common/variable-input/VariableInput';
 
 interface KafkaTopicConfigProps {
     config: NodeConfig;
@@ -12,7 +12,7 @@ interface KafkaTopicConfigProps {
     buildConnectionConfig: () => any;
     onTopicCreated: (topic: string) => void;
     connectionStatus: 'idle' | 'testing' | 'success' | 'error';
-    accentColor?: 'violet' | 'fuchsia';
+    accentColor?: string;
 }
 
 export const KafkaTopicConfig: React.FC<KafkaTopicConfigProps> = ({
@@ -24,12 +24,13 @@ export const KafkaTopicConfig: React.FC<KafkaTopicConfigProps> = ({
     buildConnectionConfig,
     onTopicCreated,
     connectionStatus,
-    accentColor = 'violet'
+    accentColor = '#7C3AED'
 }) => {
     const [showCreateForm, setShowCreateForm] = useState(false);
 
-    const textClass = accentColor === 'fuchsia' ? 'text-fuchsia-700 hover:text-fuchsia-800' : 'text-violet-700 hover:text-violet-800';
-    const ringClass = accentColor === 'fuchsia' ? 'focus:ring-fuchsia-500/50' : 'focus:ring-violet-500/50';
+    // Dynamic classes based on accent color
+    const textClass = `text-[${accentColor}] hover:opacity-80`;
+    const ringClass = `focus:ring-[${accentColor}]/50`;
 
     const handleCreateTopic = async (name: string, partitions: number) => {
         try {
@@ -49,23 +50,29 @@ export const KafkaTopicConfig: React.FC<KafkaTopicConfigProps> = ({
     };
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-2">
-                <label className="text-xs font-bold text-slate-500 uppercase">Topic</label>
+        <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+            <div className="flex justify-between items-center mb-1.5">
+                <label className="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1">
+                    <span>Topic</span>
+                    {loadingTopics && <Loader2 size={10} className="animate-spin text-slate-400" />}
+                </label>
                 <div className="flex gap-2">
                     <button
                         onClick={onLoadTopics}
                         disabled={loadingTopics}
-                        className={`text-xs flex items-center gap-1 ${textClass}`}
+                        className={`text-[10px] flex items-center gap-1 font-bold transition-colors hover:opacity-80`}
+                        style={{ color: accentColor }}
+                        title="Refresh Topics"
                     >
-                        <RefreshCw size={12} className={loadingTopics ? 'animate-spin' : ''} />
+                        <RefreshCw size={10} className={loadingTopics ? 'animate-spin' : ''} />
                         Refresh
                     </button>
                     <button
                         onClick={() => setShowCreateForm(!showCreateForm)}
-                        className={`text-xs flex items-center gap-1 ${textClass}`}
+                        className={`text-[10px] flex items-center gap-1 font-bold transition-colors ${textClass}`}
+                        style={{ color: accentColor }}
                     >
-                        <Plus size={12} />
+                        <Plus size={10} />
                         Create New
                     </button>
                 </div>
@@ -79,18 +86,23 @@ export const KafkaTopicConfig: React.FC<KafkaTopicConfigProps> = ({
                 />
             )}
 
-            <select
-                value={config.topic || ''}
-                onChange={(e) => onChange('topic', e.target.value)}
-                className={`w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 ${ringClass}`}
-            >
-                <option value="">Select a topic...</option>
-                {topics.map(topic => (
-                    <option key={topic} value={topic}>{topic}</option>
-                ))}
-            </select>
+            <div className="relative">
+                <select
+                    value={config.topic || ''}
+                    onChange={(e) => onChange('topic', e.target.value)}
+                    className={`w-full pl-2 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded text-[11px] focus:outline-none focus:ring-2 ${ringClass}`}
+                >
+                    <option value="">Select a topic...</option>
+                    {topics.map(topic => (
+                        <option key={topic} value={topic}>{topic}</option>
+                    ))}
+                </select>
+            </div>
+
             {topics.length === 0 && connectionStatus !== 'success' && (
-                <p className="text-xs text-slate-400 mt-1">Test connection to load available topics</p>
+                <p className="text-[10px] text-slate-400 mt-1 italic">
+                    * Test connection to load topics
+                </p>
             )}
         </div>
     );
@@ -101,18 +113,15 @@ export const KafkaTopicConfig: React.FC<KafkaTopicConfigProps> = ({
 const CreateTopicForm: React.FC<{
     onCreateTopic: (name: string, partitions: number) => Promise<void>;
     onClose: () => void;
-    accentColor: 'violet' | 'fuchsia';
+    accentColor: string;
 }> = ({ onCreateTopic, onClose, accentColor }) => {
     const [topicName, setTopicName] = useState('');
-    const [partitions, setPartitions] = useState('1'); // Use string for VariableInput
+    const [partitions, setPartitions] = useState('1');
     const [creating, setCreating] = useState(false);
 
     const handleSubmit = async () => {
         if (!topicName.trim()) return;
         setCreating(true);
-        // If partitions is a variable, we might default to 1 or let backend handle it?
-        // For creation, we usually need an int. If user types ${env...}, it might fail here unless resolved.
-        // But for consistency UI, we use VariableInput. We'll parse int if possible.
         const parts = parseInt(partitions) || 1;
         await onCreateTopic(topicName, parts);
         setCreating(false);
@@ -120,35 +129,35 @@ const CreateTopicForm: React.FC<{
         onClose();
     };
 
-    const bgClass = accentColor === 'fuchsia' ? 'bg-fuchsia-50 border-fuchsia-200' : 'bg-violet-50 border-violet-200';
-    const inputBorder = accentColor === 'fuchsia' ? 'border-fuchsia-300' : 'border-violet-300';
-    const btnClass = accentColor === 'fuchsia' ? 'bg-fuchsia-600' : 'bg-violet-600';
-    const textNote = accentColor === 'fuchsia' ? 'text-fuchsia-600' : 'text-violet-600';
+    const focusClass = `focus-within:ring-[${accentColor}]/20 focus-within:border-[${accentColor}]`;
+    const btnClass = `bg-[${accentColor}] hover:bg-[${accentColor}]/90`;
 
     return (
-        <div className={`mb-3 p-3 border rounded-lg space-y-2 ${bgClass}`}>
+        <div className="mb-2 p-2 border border-slate-100 bg-slate-50 rounded-lg space-y-2 animate-in slide-in-from-top-2 duration-200">
             <div className="flex gap-2">
                 <VariableInput
+                    small
                     value={topicName}
                     onValueChange={setTopicName}
                     placeholder="New topic name"
-                    className={`flex-1 bg-white border rounded ${inputBorder}`}
+                    className={`flex-1 bg-white border border-slate-200 rounded text-[11px] ${focusClass}`}
                 />
                 <VariableInput
+                    small
                     value={partitions}
                     onValueChange={setPartitions}
-                    className={`w-20 bg-white border rounded text-sm text-center ${inputBorder}`}
-                    placeholder="Partitions"
+                    className={`w-16 bg-white border border-slate-200 rounded text-[11px] text-center ${focusClass}`}
+                    placeholder="#"
                 />
                 <button
                     onClick={handleSubmit}
                     disabled={creating || !topicName.trim()}
-                    className={`px-3 py-1.5 text-white rounded text-sm font-bold disabled:opacity-50 ${btnClass}`}
+                    className={`px-3 py-1 text-white rounded text-[10px] font-bold disabled:opacity-50 transition-colors ${btnClass}`}
+                    style={{ backgroundColor: accentColor }}
                 >
-                    {creating ? <Loader2 size={14} className="animate-spin" /> : 'Create'}
+                    {creating ? <Loader2 size={12} className="animate-spin" /> : 'Create'}
                 </button>
             </div>
-            <p className={`text-[10px] ${textNote}`}>Enter topic name and number of partitions</p>
         </div>
     );
 };

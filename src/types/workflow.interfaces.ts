@@ -28,17 +28,18 @@ export interface AuthResponse {
 }
 
 export interface NodeConfig {
+    [key: string]: any;
+}
+
+export interface HttpNodeConfig extends NodeConfig {
     url?: string;
     method?: string;
-    cron?: string;
-    description?: string;
-    to?: string;
-    subject?: string;
-    headers?: Record<string, string> | { key: string; value: string }[];
+    headers?: { key: string; value: string }[];
     body?: string;
     params?: { key: string; value: string }[];
+}
 
-    // Kafka configuration
+export interface KafkaNodeConfig extends NodeConfig {
     bootstrapServers?: string;
     securityProtocol?: KafkaSecurityProtocol;
     sslTruststoreLocation?: string;
@@ -53,6 +54,40 @@ export interface NodeConfig {
     consumerGroup?: string;
     pollTimeoutMs?: number;
     autoOffsetReset?: 'latest' | 'earliest';
+}
+
+export interface ActiveMQNodeConfig extends NodeConfig {
+    brokerUrl?: string;
+    username?: string;
+    password?: string;
+    // SSL Config
+    sslEnabled?: boolean;
+    sslTrustStoreLocation?: string;
+    sslTrustStorePassword?: string;
+    sslKeyStoreLocation?: string;
+    sslKeyStorePassword?: string;
+
+    destinationType?: string;
+    destinationName?: string;
+    messageBody?: string;
+    activeMQMode?: 'PRODUCER' | 'CONSUMER';
+    consumerGroup?: string;
+    pollTimeoutMs?: number;
+    autoOffsetReset?: 'latest' | 'earliest';
+}
+
+export interface CronNodeConfig extends NodeConfig {
+    cron?: string;
+}
+
+export interface WebhookNodeConfig extends NodeConfig {
+    method?: string;
+}
+
+export interface EmailNodeConfig extends NodeConfig {
+    to?: string;
+    subject?: string;
+    body?: string;
 }
 
 export interface NodeData {

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { KafkaMode, NodeConfig } from '../../../../types/workflow.interfaces';
+import { KafkaMode, KafkaNodeConfig } from '../../../../types/workflow.interfaces';
 import { KafkaBrokerConfig } from './KafkaBrokerConfig';
 import { KafkaPayloadConfig } from './KafkaPayloadConfig';
 import { KafkaSecurityConfig } from './KafkaSecurityConfig';
 import { KafkaTopicConfig } from './KafkaTopicConfig';
 
 interface KafkaConfigFormProps {
-    config: NodeConfig;
+    config: KafkaNodeConfig;
     onChange: (key: string, value: any) => void;
     fixedMode?: KafkaMode;
-    accentColor?: 'violet' | 'fuchsia';
+    accentColor?: string;
 }
 
-const KafkaConfigForm: React.FC<KafkaConfigFormProps> = ({ config, onChange, fixedMode, accentColor = 'violet' }) => {
+const KafkaConfigForm: React.FC<KafkaConfigFormProps> = ({ config, onChange, fixedMode, accentColor = '#7C3AED' }) => {
     // Connection test state
     const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
     const [connectionError, setConnectionError] = useState<string>('');
@@ -135,33 +135,33 @@ export default KafkaConfigForm;
 
 
 /** Producer/Consumer mode toggle buttons */
+/** Producer/Consumer mode toggle buttons */
 const ModeSelector: React.FC<{
     mode: KafkaMode;
     onChange: (mode: KafkaMode) => void;
-    accentColor: 'violet' | 'fuchsia';
+    accentColor: string;
 }> = ({ mode, onChange, accentColor }) => {
-    const activeClass = accentColor === 'fuchsia'
-        ? 'bg-fuchsia-600 text-white shadow-md shadow-fuchsia-200'
-        : 'bg-violet-600 text-white shadow-md shadow-violet-200';
+    const activeClass = `text-white shadow-sm`;
 
     return (
-        <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Mode</label>
+        <div className="bg-slate-100 p-1 rounded-lg">
             <div className="flex gap-2">
                 <button
                     onClick={() => onChange('PRODUCER' as KafkaMode)}
-                    className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${mode === 'PRODUCER'
+                    style={{ backgroundColor: mode === 'PRODUCER' ? accentColor : undefined }}
+                    className={`flex-1 py-1.5 rounded-md text-[11px] font-bold transition-all ${mode === 'PRODUCER'
                         ? activeClass
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'text-slate-500 hover:bg-slate-200'
                         }`}
                 >
                     Producer
                 </button>
                 <button
                     onClick={() => onChange('CONSUMER' as KafkaMode)}
-                    className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${mode === 'CONSUMER'
+                    style={{ backgroundColor: mode === 'CONSUMER' ? accentColor : undefined }}
+                    className={`flex-1 py-1.5 rounded-md text-[11px] font-bold transition-all ${mode === 'CONSUMER'
                         ? activeClass
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'text-slate-500 hover:bg-slate-200'
                         }`}
                 >
                     Consumer

@@ -38,5 +38,10 @@ export const API_CONFIG = {
         TEST_CONNECTION: api('/kafka/test-connection'),
         TOPICS: api('/kafka/topics'),
         CREATE_TOPIC: api('/kafka/topics/create')
+    },
+    ACTIVEMQ: {
+        TEST_CONNECTION: api('/activemq/test-connection'),
+        DESTINATIONS: api('/activemq/destinations'),
+        CREATE_DESTINATION: api('/activemq/destinations')
     }
 };

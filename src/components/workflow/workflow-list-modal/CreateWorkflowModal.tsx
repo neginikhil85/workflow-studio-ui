@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Plus } from 'lucide-react';
-import { VariableInput } from '../../common/VariableInput';
+
 
 interface CreateWorkflowModalProps {
     isOpen: boolean;
@@ -17,11 +17,14 @@ export const CreateWorkflowModal: React.FC<CreateWorkflowModalProps> = ({
 }) => {
     const [name, setName] = useState('New Workflow');
     const [description, setDescription] = useState('');
+    const inputRef = React.useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (isOpen) {
             setName('New Workflow');
             setDescription('');
+            // Focus input after a small delay to allow animation/rendering
+            setTimeout(() => inputRef.current?.select(), 100);
         }
     }, [isOpen]);
 
@@ -59,12 +62,15 @@ export const CreateWorkflowModal: React.FC<CreateWorkflowModalProps> = ({
                         <label className="block text-sm font-medium text-slate-700 mb-2">
                             Workflow Name <span className="text-red-500">*</span>
                         </label>
-                        <VariableInput
+                        <input
+                            ref={inputRef}
+                            type="text"
                             value={name}
-                            onValueChange={setName}
-                            className="bg-white border-slate-300 focus-within:ring-primary-500/20 focus-within:border-primary-500 text-sm"
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all text-sm"
                             placeholder="e.g., Order Processing Pipeline"
-                        // disabled={isLoading} // VariableInput might not pass disabled prop correctly yet, assume standard behavior
+                            disabled={isLoading}
+                            required
                         />
                     </div>
 
@@ -72,12 +78,12 @@ export const CreateWorkflowModal: React.FC<CreateWorkflowModalProps> = ({
                         <label className="block text-sm font-medium text-slate-700 mb-2">
                             Description
                         </label>
-                        <VariableInput
-                            rows={3}
+                        <textarea
                             value={description}
-                            onValueChange={setDescription}
-                            className="bg-white border-slate-300 focus-within:ring-primary-500/20 focus-within:border-primary-500 text-sm h-24"
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all text-sm h-24 resize-none"
                             placeholder="Describe what this workflow does..."
+                            disabled={isLoading}
                         />
                     </div>
 

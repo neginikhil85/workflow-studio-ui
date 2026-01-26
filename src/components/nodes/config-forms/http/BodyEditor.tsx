@@ -1,7 +1,7 @@
 import React from 'react';
 import { Wand2 } from 'lucide-react';
 
-import { VariableInput } from '../../../common/VariableInput';
+import { VariableInput } from '../../../common/variable-input/VariableInput';
 
 interface BodyEditorProps {
     body: string;
@@ -39,14 +39,15 @@ export const BodyEditor: React.FC<BodyEditorProps> = ({ body, onChange }) => {
                 <BodyTypeBadge body={body} />
             </div>
             <VariableInput
-                rows={10}
                 value={body}
                 onValueChange={(val) => onChange(val)}
-                className={`bg-slate-900 text-slate-200 border-slate-700 font-mono text-xs transition-all ${hasJsonError
-                    ? 'focus-within:ring-rose-500 border-rose-500/50'
-                    : 'border-transparent'
+                className={`flex-1 h-full min-h-[200px] bg-slate-900 text-slate-200 border-slate-700 font-mono text-xs transition-all 
+                    ${hasJsonError
+                        ? 'focus-within:ring-rose-500 border-rose-500/50'
+                        : 'border-slate-700'
                     }`}
                 placeholder='{ "key": "value" } or plain text'
+                rows={8}
             />
             {hasJsonError && <JsonErrorMessage body={body} />}
         </div>

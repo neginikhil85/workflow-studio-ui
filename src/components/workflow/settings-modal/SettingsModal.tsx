@@ -3,7 +3,7 @@ import { Plus, Trash2, Key, Globe, X } from 'lucide-react';
 import { useServices } from '../../../contexts/ServiceContext';
 import { EnvironmentVariable } from '../../../services/IEnvironmentService';
 import { toast } from 'sonner';
-import { VariableInput } from '../../common/VariableInput';
+import { VariableInput } from '../../common/variable-input/VariableInput';
 
 interface SettingsModalProps {
     isOpen: boolean;

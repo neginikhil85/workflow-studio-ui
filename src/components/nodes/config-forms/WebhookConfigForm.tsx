@@ -1,9 +1,9 @@
 import React from 'react';
-import { NodeConfig } from '../../../types/workflow.interfaces';
-import { VariableInput } from '../../common/VariableInput';
+import { WebhookNodeConfig } from '../../../types/workflow.interfaces';
+import { VariableInput } from '../../common/variable-input/VariableInput';
 
 interface WebhookConfigFormProps {
-    config: NodeConfig;
+    config: WebhookNodeConfig;
     onChange: (key: string, value: any) => void;
 }
 

@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
-import { WorkflowNode, NodeConfig, KafkaMode } from '../../../types/workflow.interfaces';
+import {
+    WorkflowNode,
+    NodeConfig,
+    KafkaMode,
+    HttpNodeConfig,
+    ActiveMQNodeConfig,
+    KafkaNodeConfig,
+    CronNodeConfig,
+    WebhookNodeConfig,
+    EmailNodeConfig
+} from '../../../types/workflow.interfaces';
 import { ConfigModalHeader } from './ConfigModalHeader';
 import { ConfigModalFooter } from './ConfigModalFooter';
 
@@ -10,6 +20,7 @@ import CronConfigForm from '../../nodes/config-forms/cron/CronConfigForm';
 import EmailConfigForm from '../../nodes/config-forms/EmailConfigForm';
 import WebhookConfigForm from '../../nodes/config-forms/WebhookConfigForm';
 import KafkaConfigForm from '../../nodes/config-forms/kafka/KafkaConfigForm';
+import ActiveMQConfigForm from '../../nodes/config-forms/activemq/ActiveMQConfigForm';
 
 interface ConfigModalProps {
     node: WorkflowNode | null;
@@ -47,17 +58,19 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ node, isOpen, onClose, onSave
         // --- STATIC MAPPING ---
         switch (nodeType) {
             case 'IntegrationNodeType_HTTP_CALL':
-                return <HttpConfigForm config={config} onChange={handleConfigChange} />;
+                return <HttpConfigForm config={config as HttpNodeConfig} onChange={handleConfigChange} />;
+            case 'IntegrationNodeType_ACTIVE_MQ':
+                return <ActiveMQConfigForm config={config as ActiveMQNodeConfig} onChange={handleConfigChange} />;
             case 'IntegrationNodeType_KAFKA':
-                return <KafkaConfigForm config={config} onChange={handleConfigChange} />;
+                return <KafkaConfigForm config={config as KafkaNodeConfig} onChange={handleConfigChange} />;
             case 'TriggerNodeType_KAFKA':
-                return <KafkaConfigForm config={config} onChange={handleConfigChange} fixedMode={KafkaMode.CONSUMER} accentColor="fuchsia" />;
+                return <KafkaConfigForm config={config as KafkaNodeConfig} onChange={handleConfigChange} fixedMode={KafkaMode.CONSUMER} accentColor="fuchsia" />;
             case 'TriggerNodeType_CRON':
-                return <CronConfigForm config={config} onChange={handleConfigChange} />;
+                return <CronConfigForm config={config as CronNodeConfig} onChange={handleConfigChange} />;
             case 'TriggerNodeType_WEBHOOK':
-                return <WebhookConfigForm config={config} onChange={handleConfigChange} />;
+                return <WebhookConfigForm config={config as WebhookNodeConfig} onChange={handleConfigChange} />;
             case 'NotificationNodeType_EMAIL':
-                return <EmailConfigForm config={config} onChange={handleConfigChange} />;
+                return <EmailConfigForm config={config as EmailNodeConfig} onChange={handleConfigChange} />;
             default:
                 // Fallback for unknown types
                 return (

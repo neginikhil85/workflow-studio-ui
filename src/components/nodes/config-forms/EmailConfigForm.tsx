@@ -1,9 +1,9 @@
 import React from 'react';
-import { NodeConfig } from '../../../types/workflow.interfaces';
-import { VariableInput } from '../../common/VariableInput';
+import { EmailNodeConfig } from '../../../types/workflow.interfaces';
+import { VariableInput } from '../../common/variable-input/VariableInput';
 
 interface EmailConfigFormProps {
-    config: NodeConfig;
+    config: EmailNodeConfig;
     onChange: (key: string, value: any) => void;
 }
 
