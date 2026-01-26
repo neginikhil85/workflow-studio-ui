@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import cronstrue from 'cronstrue';
 import { NodeConfig } from '../../../../types/workflow.interfaces';
 import { CronTooltip } from './CronTooltip';
+import { VariableInput } from '../../../../components/common/VariableInput';
 
 interface CronConfigFormProps {
     config: NodeConfig;
@@ -12,6 +13,9 @@ const CronConfigForm: React.FC<CronConfigFormProps> = ({ config, onChange }) => 
     const cronDescription = useMemo(() => {
         const cron = config.cron?.trim();
         if (!cron) return null;
+        // If it contains a variable, don't try to parse it
+        if (cron.includes('${')) return "Dynamic cron expression";
+
         try {
             return cronstrue.toString(cron, { throwExceptionOnParseError: true });
         } catch {
@@ -28,12 +32,11 @@ const CronConfigForm: React.FC<CronConfigFormProps> = ({ config, onChange }) => 
                     <label className="block text-xs font-bold text-slate-500 uppercase">Cron Expression</label>
                     <CronTooltip />
                 </div>
-                <input
-                    type="text"
+                <VariableInput
                     value={config.cron || ''}
-                    onChange={(e) => onChange('cron', e.target.value)}
+                    onValueChange={(val) => onChange('cron', val)}
                     placeholder="0 0 9 * * *"
-                    className={`w-full px-3 py-2 font-mono bg-slate-50 border rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 ${config.cron && !isValidCron
+                    className={`font-mono bg-slate-50 text-slate-900 ${config.cron && !isValidCron && !config.cron.includes('${')
                         ? 'border-rose-300 focus:ring-rose-500/50'
                         : 'border-slate-300 focus:ring-blue-500/50'
                         }`}
@@ -57,12 +60,11 @@ const CronConfigForm: React.FC<CronConfigFormProps> = ({ config, onChange }) => 
             </div>
             <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Description</label>
-                <input
-                    type="text"
+                <VariableInput
                     value={config.description || ''}
-                    onChange={(e) => onChange('description', e.target.value)}
+                    onValueChange={(val) => onChange('description', val)}
                     placeholder="e.g., My Daily Backup Schedule"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono"
+                    className="bg-slate-50 border-slate-200 font-mono"
                 />
             </div>
         </div>

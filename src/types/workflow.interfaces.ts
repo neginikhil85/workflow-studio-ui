@@ -69,6 +69,8 @@ export interface WorkflowEdge {
     from: string;
     to: string;
     condition: string | null;
+    sourceHandle?: string | null;
+    targetHandle?: string | null;
 }
 
 export interface WorkflowNodeDefinition {

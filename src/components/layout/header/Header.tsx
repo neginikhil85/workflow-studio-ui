@@ -9,9 +9,10 @@ interface HeaderProps {
     persistence: HeaderPersistence;
     onWorkflows: () => void;
     onHistory: () => void;
+    onOpenSettings: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ state, execution, persistence, onWorkflows, onHistory }) => {
+const Header: React.FC<HeaderProps> = ({ state, execution, persistence, onWorkflows, onHistory, onOpenSettings }) => {
     return (
         <div className="h-14 bg-slate-100 border-b border-slate-200 flex items-center px-4 justify-between z-20 relative">
             <HeaderTitle state={state} />
@@ -20,6 +21,7 @@ const Header: React.FC<HeaderProps> = ({ state, execution, persistence, onWorkfl
                 persistence={persistence}
                 onWorkflows={onWorkflows}
                 onHistory={onHistory}
+                onOpenSettings={onOpenSettings}
             />
         </div>
     );

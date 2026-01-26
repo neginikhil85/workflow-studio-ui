@@ -1,6 +1,8 @@
 import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 
+import { VariableInput } from '../../../common/VariableInput';
+
 interface KeyValueEditorProps {
     items: { key: string; value: string }[];
     label: string;
@@ -30,19 +32,23 @@ export const KeyValueEditor: React.FC<KeyValueEditorProps> = ({
         )}
         {items.map((item, idx) => (
             <div key={idx} className="flex gap-2">
-                <input
-                    placeholder="Key"
-                    value={item.key}
-                    onChange={(e) => onUpdate(idx, 'key', e.target.value)}
-                    className="flex-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded text-xs focus:ring-1 focus:ring-blue-500"
-                />
-                <input
-                    placeholder="Value"
-                    value={item.value}
-                    onChange={(e) => onUpdate(idx, 'value', e.target.value)}
-                    className="flex-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded text-xs focus:ring-1 focus:ring-blue-500"
-                />
-                <button onClick={() => onRemove(idx)} className="text-slate-400 hover:text-red-500">
+                <div className="flex-1">
+                    <VariableInput
+                        placeholder="Key"
+                        value={item.key}
+                        onValueChange={(val) => onUpdate(idx, 'key', val)}
+                        className="bg-slate-50 border-slate-200"
+                    />
+                </div>
+                <div className="flex-1">
+                    <VariableInput
+                        placeholder="Value"
+                        value={item.value}
+                        onValueChange={(val) => onUpdate(idx, 'value', val)}
+                        className="bg-slate-50 border-slate-200"
+                    />
+                </div>
+                <button onClick={() => onRemove(idx)} className="text-slate-400 hover:text-red-500 pt-2">
                     <Trash2 size={14} />
                 </button>
             </div>

@@ -9,7 +9,8 @@ import ReactFlow, {
     OnNodesChange,
     OnEdgesChange,
     OnConnect,
-    BackgroundVariant
+    BackgroundVariant,
+    ConnectionLineType
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { NODE_TYPE_REGISTRY } from '../../config/nodes/node.registry';
@@ -55,6 +56,7 @@ const Canvas: React.FC<CanvasProps> = ({ state, actions }) => {
                 attributionPosition="bottom-right"
                 nodeTypes={NODE_TYPE_REGISTRY}
                 proOptions={{ hideAttribution: true }}
+                connectionLineType={ConnectionLineType.SmoothStep}
             >
                 <Background color="#000000ff" gap={20} size={1} variant={BackgroundVariant.Dots} className="opacity-40" />
                 <Controls className="!bg-white !border-slate-200 !shadow-xl !rounded-xl overflow-hidden [&>button]:!border-b-slate-100 [&>button]:!text-slate-600 hover:[&>button]:!bg-slate-50 !m-4" />

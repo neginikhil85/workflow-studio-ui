@@ -39,13 +39,13 @@ export const RunDetailsView: React.FC<RunDetailsViewProps> = ({ nodeResults }) =
                             <div className="bg-slate-50 p-2 rounded border border-slate-100">
                                 <span className="text-[10px] font-semibold text-slate-400 block mb-1">INPUT</span>
                                 <pre className="text-[10px] text-slate-600 overflow-x-auto">
-                                    {JSON.stringify(node.inputData, null, 2)}
+                                    {JSON.stringify(node.executionDetails?.input || {}, null, 2)}
                                 </pre>
                             </div>
                             <div className="bg-slate-50 p-2 rounded border border-slate-100">
                                 <span className="text-[10px] font-semibold text-slate-400 block mb-1">OUTPUT</span>
                                 <pre className="text-[10px] text-slate-600 overflow-x-auto">
-                                    {JSON.stringify(node.outputData || node.errorMessage, null, 2)}
+                                    {JSON.stringify(node.executionDetails?.output || node.errorMessage || {}, null, 2)}
                                 </pre>
                             </div>
                         </div>

@@ -40,11 +40,13 @@ export const useWorkflow = () => {
             workflowName: state.workflowName,
             selectedNode: state.selectedNode,
             isModalOpen: state.isModalOpen,
+            isSettingsOpen: state.isSettingsOpen,
             reactFlowWrapper: state.canvasRef,
         },
         actions: {
             setWorkflowName: state.setWorkflowName,
             setIsModalOpen: state.setIsModalOpen,
+            setIsSettingsOpen: state.setIsSettingsOpen,
             setReactFlowInstance: state.setFlowInstance,
             onNodesChange: state.onNodesChange,
             onEdgesChange: state.onEdgesChange,

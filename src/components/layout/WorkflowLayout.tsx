@@ -7,6 +7,7 @@ import { useWorkflow } from '../../hooks/workflow/useWorkflow';
 import WorkflowListModal from '../workflow/workflow-list-modal/WorkflowListModal';
 import { Toaster } from 'sonner';
 import { ExecutionHistoryModal } from '../workflow/execution-history/ExecutionHistoryModal';
+import { SettingsModal } from '../workflow/settings-modal/SettingsModal';
 
 import { API_CONFIG } from '../../config/api.config';
 
@@ -24,6 +25,7 @@ const WorkflowLayout: React.FC = () => {
                 persistence={persistence}
                 onWorkflows={() => setIsListOpen(true)}
                 onHistory={() => setIsHistoryOpen(true)}
+                onOpenSettings={() => actions.setIsSettingsOpen(true)}
             />
 
             <div className="flex-1 flex overflow-hidden">
@@ -62,6 +64,11 @@ const WorkflowLayout: React.FC = () => {
                     onClose={() => setIsHistoryOpen(false)}
                     workflowId={state.workflowId}
                     nodes={state.nodes}
+                />
+
+                <SettingsModal
+                    isOpen={state.isSettingsOpen}
+                    onClose={() => actions.setIsSettingsOpen(false)}
                 />
             </div>
         </div>

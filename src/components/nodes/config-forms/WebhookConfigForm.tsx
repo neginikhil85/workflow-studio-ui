@@ -1,24 +1,31 @@
 import React from 'react';
 import { NodeConfig } from '../../../types/workflow.interfaces';
+import { VariableInput } from '../../common/VariableInput';
 
 interface WebhookConfigFormProps {
     config: NodeConfig;
-    onChange?: (key: string, value: any) => void;
+    onChange: (key: string, value: any) => void;
 }
 
-const WebhookConfigForm: React.FC<WebhookConfigFormProps> = ({ config }) => {
+const WebhookConfigForm: React.FC<WebhookConfigFormProps> = ({ config, onChange }) => {
     return (
-        <div className="flex flex-col items-center justify-center h-48 text-center space-y-3">
-            <div className="p-3 bg-blue-50 rounded-full">
-                <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <div>
-                <h3 className="text-sm font-bold text-slate-700">Webhook Trigger</h3>
-                <p className="text-xs text-slate-500 mt-1 max-w-[250px] mx-auto">
-                    Values sent to this webhook URL will be passed as input to the workflow.
+        <div className="space-y-4">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                <p className="font-bold mb-1">Webhook Configuration</p>
+                <p>This node triggers the workflow when an external HTTP request is received.</p>
+                <p className="mt-2 text-xs text-blue-600">
+                    Endpoint: <code className="bg-blue-100 px-1 rounded">POST /api/webhooks/start</code>
                 </p>
+            </div>
+
+            <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Description</label>
+                <VariableInput
+                    value={config.description || ''}
+                    onValueChange={(val) => onChange('description', val)}
+                    placeholder="e.g., Stripe Payment Webhook"
+                    className="bg-slate-50 border-slate-200"
+                />
             </div>
         </div>
     );

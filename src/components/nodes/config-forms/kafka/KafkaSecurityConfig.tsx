@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight, Shield } from 'lucide-react';
 import React, { useState } from 'react';
 import { KafkaSecurityProtocol, NodeConfig } from '../../../../types/workflow.interfaces';
+import { VariableInput } from '../../../../components/common/VariableInput';
 
 interface KafkaSecurityConfigProps {
     config: NodeConfig;
@@ -77,11 +78,12 @@ const SaslConfigFields: React.FC<{
         </div>
         <div>
             <label className="block text-xs font-medium text-amber-700 mb-1">JAAS Config</label>
-            <textarea
+            <VariableInput
+                rows={3}
                 value={config.saslJaasConfig || ''}
-                onChange={(e) => onChange('saslJaasConfig', e.target.value)}
+                onValueChange={(val) => onChange('saslJaasConfig', val)}
                 placeholder="org.apache.kafka.common.security.plain.PlainLoginModule required username='user' password='pass';"
-                className="w-full px-3 py-2 bg-white border border-amber-300 rounded text-xs font-mono h-20"
+                className="bg-white border-amber-300 font-mono text-xs"
             />
         </div>
     </div>
@@ -97,38 +99,38 @@ const SslConfigFields: React.FC<{
         <div className="grid grid-cols-2 gap-3">
             <div>
                 <label className="block text-xs font-medium text-blue-700 mb-1">Truststore Location</label>
-                <input
+                <VariableInput
                     value={config.sslTruststoreLocation || ''}
-                    onChange={(e) => onChange('sslTruststoreLocation', e.target.value)}
+                    onValueChange={(val) => onChange('sslTruststoreLocation', val)}
                     placeholder="/path/to/truststore.jks"
-                    className="w-full px-2 py-1.5 bg-white border border-blue-300 rounded text-xs"
+                    className="bg-white border-blue-300"
                 />
             </div>
             <div>
                 <label className="block text-xs font-medium text-blue-700 mb-1">Truststore Password</label>
-                <input
-                    type="password"
+                <VariableInput
                     value={config.sslTruststorePassword || ''}
-                    onChange={(e) => onChange('sslTruststorePassword', e.target.value)}
-                    className="w-full px-2 py-1.5 bg-white border border-blue-300 rounded text-xs"
+                    onValueChange={(val) => onChange('sslTruststorePassword', val)}
+                    className="bg-white border-blue-300"
+                    type="password"
                 />
             </div>
             <div>
                 <label className="block text-xs font-medium text-blue-700 mb-1">Keystore Location</label>
-                <input
+                <VariableInput
                     value={config.sslKeystoreLocation || ''}
-                    onChange={(e) => onChange('sslKeystoreLocation', e.target.value)}
+                    onValueChange={(val) => onChange('sslKeystoreLocation', val)}
                     placeholder="/path/to/keystore.jks"
-                    className="w-full px-2 py-1.5 bg-white border border-blue-300 rounded text-xs"
+                    className="bg-white border-blue-300"
                 />
             </div>
             <div>
                 <label className="block text-xs font-medium text-blue-700 mb-1">Keystore Password</label>
-                <input
-                    type="password"
+                <VariableInput
                     value={config.sslKeystorePassword || ''}
-                    onChange={(e) => onChange('sslKeystorePassword', e.target.value)}
-                    className="w-full px-2 py-1.5 bg-white border border-blue-300 rounded text-xs"
+                    onValueChange={(val) => onChange('sslKeystorePassword', val)}
+                    className="bg-white border-blue-300"
+                    type="password"
                 />
             </div>
         </div>

@@ -48,6 +48,8 @@ export const useWorkflowPersistence = (
                 id: `e${e.from}-${e.to}`,
                 source: e.from,
                 target: e.to,
+                sourceHandle: e.sourceHandle,
+                targetHandle: e.targetHandle,
                 type: 'smoothstep'
             }));
 
@@ -80,7 +82,13 @@ export const useWorkflowPersistence = (
                     config: n.data.config || {},
                     metadata: { position: n.position, label: n.data.label }
                 })),
-                edges: edges.map(e => ({ from: e.source, to: e.target, condition: null }))
+                edges: edges.map(e => ({
+                    from: e.source,
+                    to: e.target,
+                    condition: null,
+                    sourceHandle: e.sourceHandle || null,
+                    targetHandle: e.targetHandle || null
+                }))
             };
 
             const savedId = await workflowService.saveWorkflow(payload);

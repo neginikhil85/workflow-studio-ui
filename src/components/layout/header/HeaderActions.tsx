@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Square, Play, History } from 'lucide-react';
+import { Trash2, Square, Play, History, Globe } from 'lucide-react';
 import { HeaderExecution, HeaderPersistence } from '../../../types/workflow.interfaces';
 
 interface HeaderActionsProps {
@@ -7,12 +7,22 @@ interface HeaderActionsProps {
     persistence: HeaderPersistence;
     onWorkflows: () => void;
     onHistory: () => void;
+    onOpenSettings: () => void;
 }
 
-export const HeaderActions: React.FC<HeaderActionsProps> = ({ execution, persistence, onWorkflows, onHistory }) => {
+export const HeaderActions: React.FC<HeaderActionsProps> = ({ execution, persistence, onWorkflows, onHistory, onOpenSettings }) => {
     return (
         <div className="flex items-center gap-3">
             {/* Status Badge - Removed as per user request */}
+
+            <button
+                onClick={onOpenSettings}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-violet-600 hover:bg-violet-50 border border-slate-200 rounded-md transition-all group"
+                title="Global Environmental Variables"
+            >
+                <Globe size={14} className="text-slate-400 group-hover:text-violet-500" />
+                <span className="hidden md:inline">Variables</span>
+            </button>
 
             <button
                 onClick={onWorkflows}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2, Plus, RefreshCw } from 'lucide-react';
 import { NodeConfig } from '../../../../types/workflow.interfaces';
+import { VariableInput } from '../../../../components/common/VariableInput';
 
 interface KafkaTopicConfigProps {
     config: NodeConfig;
@@ -103,13 +104,17 @@ const CreateTopicForm: React.FC<{
     accentColor: 'violet' | 'fuchsia';
 }> = ({ onCreateTopic, onClose, accentColor }) => {
     const [topicName, setTopicName] = useState('');
-    const [partitions, setPartitions] = useState(1);
+    const [partitions, setPartitions] = useState('1'); // Use string for VariableInput
     const [creating, setCreating] = useState(false);
 
     const handleSubmit = async () => {
         if (!topicName.trim()) return;
         setCreating(true);
-        await onCreateTopic(topicName, partitions);
+        // If partitions is a variable, we might default to 1 or let backend handle it?
+        // For creation, we usually need an int. If user types ${env...}, it might fail here unless resolved.
+        // But for consistency UI, we use VariableInput. We'll parse int if possible.
+        const parts = parseInt(partitions) || 1;
+        await onCreateTopic(topicName, parts);
         setCreating(false);
         setTopicName('');
         onClose();
@@ -123,18 +128,16 @@ const CreateTopicForm: React.FC<{
     return (
         <div className={`mb-3 p-3 border rounded-lg space-y-2 ${bgClass}`}>
             <div className="flex gap-2">
-                <input
+                <VariableInput
                     value={topicName}
-                    onChange={(e) => setTopicName(e.target.value)}
+                    onValueChange={setTopicName}
                     placeholder="New topic name"
-                    className={`flex-1 px-2 py-1.5 bg-white border rounded text-sm ${inputBorder}`}
+                    className={`flex-1 bg-white border rounded ${inputBorder}`}
                 />
-                <input
-                    type="number"
+                <VariableInput
                     value={partitions}
-                    onChange={(e) => setPartitions(parseInt(e.target.value) || 1)}
-                    min={1}
-                    className={`w-20 px-2 py-1.5 bg-white border rounded text-sm text-center ${inputBorder}`}
+                    onValueChange={setPartitions}
+                    className={`w-20 bg-white border rounded text-sm text-center ${inputBorder}`}
                     placeholder="Partitions"
                 />
                 <button

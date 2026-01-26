@@ -1,6 +1,8 @@
 import React from 'react';
 import { Wand2 } from 'lucide-react';
 
+import { VariableInput } from '../../../common/VariableInput';
+
 interface BodyEditorProps {
     body: string;
     onChange: (value: string) => void;
@@ -36,12 +38,13 @@ export const BodyEditor: React.FC<BodyEditorProps> = ({ body, onChange }) => {
                 </div>
                 <BodyTypeBadge body={body} />
             </div>
-            <textarea
+            <VariableInput
+                rows={10}
                 value={body}
-                onChange={(e) => onChange(e.target.value)}
-                className={`w-full h-48 bg-slate-900 text-slate-200 p-3 rounded-lg font-mono text-xs focus:outline-none focus:ring-2 transition-all ${hasJsonError
-                    ? 'focus:ring-rose-500 border border-rose-500/50'
-                    : 'focus:ring-blue-500 border-transparent'
+                onValueChange={(val) => onChange(val)}
+                className={`bg-slate-900 text-slate-200 border-slate-700 font-mono text-xs transition-all ${hasJsonError
+                    ? 'focus-within:ring-rose-500 border-rose-500/50'
+                    : 'border-transparent'
                     }`}
                 placeholder='{ "key": "value" } or plain text'
             />

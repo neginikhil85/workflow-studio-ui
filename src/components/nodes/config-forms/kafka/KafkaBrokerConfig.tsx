@@ -1,6 +1,7 @@
 import { CheckCircle2, Loader2, Radio, Server, XCircle } from 'lucide-react';
 import React from 'react';
 import { NodeConfig } from '../../../../types/workflow.interfaces';
+import { VariableInput } from '../../../../components/common/VariableInput';
 
 interface KafkaBrokerConfigProps {
     config: NodeConfig;
@@ -22,7 +23,7 @@ export const KafkaBrokerConfig: React.FC<KafkaBrokerConfigProps> = ({
     onTestConnection,
     accentColor = 'violet'
 }) => {
-    const focusRing = accentColor === 'fuchsia' ? 'focus:ring-fuchsia-500/50' : 'focus:ring-violet-500/50';
+    const focusRing = accentColor === 'fuchsia' ? 'focus-within:ring-fuchsia-500/50' : 'focus-within:ring-violet-500/50';
     const btnClass = accentColor === 'fuchsia'
         ? 'bg-fuchsia-600 hover:bg-fuchsia-700 disabled:bg-fuchsia-400 shadow-fuchsia-200'
         : 'bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 shadow-violet-200';
@@ -37,11 +38,11 @@ export const KafkaBrokerConfig: React.FC<KafkaBrokerConfigProps> = ({
             <div className="flex gap-3">
                 <div className="flex-1">
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Bootstrap Servers</label>
-                    <input
+                    <VariableInput
                         value={config.bootstrapServers || ''}
-                        onChange={(e) => onChange('bootstrapServers', e.target.value)}
+                        onValueChange={(val) => onChange('bootstrapServers', val)}
                         placeholder="localhost:9092"
-                        className={`w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 ${focusRing}`}
+                        className={`bg-slate-50 border-slate-200 font-mono ${focusRing}`}
                     />
                 </div>
                 <div className="flex items-end">

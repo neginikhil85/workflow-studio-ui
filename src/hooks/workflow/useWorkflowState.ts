@@ -17,6 +17,7 @@ export const useWorkflowState = () => {
     // UI/Modal State
     const [selectedNode, setSelectedNode] = useState<WorkflowNode | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     return {
         canvasRef,
@@ -27,7 +28,8 @@ export const useWorkflowState = () => {
         workflowName, setWorkflowName,
         workflowDescription, setWorkflowDescription,
         selectedNode, setSelectedNode,
-        isModalOpen, setIsModalOpen
+        isModalOpen, setIsModalOpen,
+        isSettingsOpen, setIsSettingsOpen
     };
 };
 

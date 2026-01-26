@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NodeConfig } from '../../../../types/workflow.interfaces';
 import { KeyValueEditor } from './KeyValueEditor';
 import { BodyEditor } from './BodyEditor';
+import { VariableInput } from '../../../common/VariableInput';
 
 interface HttpConfigFormProps {
     config: NodeConfig;
@@ -96,11 +97,11 @@ const MethodUrlInputs: React.FC<{
         </div>
         <div className="flex-1">
             <label className="block text-xs font-bold text-slate-500 uppercase mb-2">URL</label>
-            <input
+            <VariableInput
                 value={config.url || ''}
-                onChange={(e) => onChange('url', e.target.value)}
+                onValueChange={(val) => onChange('url', val)}
                 placeholder="https://api.example.com/v1/resource"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-mono"
+                className="bg-slate-50 border-slate-200 font-mono"
             />
         </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { WorkflowExecution, NodeExecutionResult, WorkflowNodeDefinition } from '../../../types/workflow.interfaces';
-import { CheckCircle, AlertCircle, Clock, ChevronRight, Play } from 'lucide-react';
+import { CheckCircle, AlertCircle, ChevronRight } from 'lucide-react';
 import { NODE_STATUS } from '../../../config/constants';
 
 interface RunTimelineProps {
@@ -63,8 +63,8 @@ export const RunTimeline: React.FC<RunTimelineProps> = ({
                                         key={node.id}
                                         onClick={() => onSelect(node)}
                                         className={`group relative flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all ${isSelected
-                                                ? 'bg-blue-50 border border-blue-200 shadow-sm'
-                                                : 'hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100'
+                                            ? 'bg-blue-50 border border-blue-200 shadow-sm'
+                                            : 'hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100'
                                             }`}
                                     >
                                         <div className={`flex-shrink-0 `}>
