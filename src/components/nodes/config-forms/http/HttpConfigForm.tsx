@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HttpNodeConfig } from '../../../../types/workflow.interfaces';
 import { KeyValueEditor } from './KeyValueEditor';
 import { BodyEditor } from './BodyEditor';
@@ -13,6 +13,13 @@ const HttpConfigForm: React.FC<HttpConfigFormProps> = ({ config, onChange }) => 
     const [activeTab, setActiveTab] = useState<'params' | 'headers' | 'body'>('params');
     const method = config.method || 'GET';
     const hasBody = ['POST', 'PUT', 'PATCH'].includes(method);
+
+    // Reset tab if method changes to one without body
+    useEffect(() => {
+        if (!hasBody && activeTab === 'body') {
+            setActiveTab('params');
+        }
+    }, [hasBody, activeTab]);
 
     const updateMapItem = (key: 'params' | 'headers', index: number, field: 'key' | 'value', value: string) => {
         const list = [...((config[key] as { key: string; value: string }[]) || [])];
