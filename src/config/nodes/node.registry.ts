@@ -15,12 +15,14 @@ export const NODE_TYPE_REGISTRY: NodeTypeRegistry = {
     [TriggerNodeType.WEBHOOK]: CardNode,
     [TriggerNodeType.CRON]: CardNode,
     [TriggerNodeType.KAFKA]: CardNode,
+    [TriggerNodeType.ACTIVEMQ]: CardNode,
 
     // Integration
     [IntegrationNodeType.HTTP_CALL]: CardNode,
     [IntegrationNodeType.KAFKA]: CardNode,
     [IntegrationNodeType.ARTEMIS_QUEUE]: CardNode,
     [IntegrationNodeType.ACTIVE_MQ]: CardNode,
+
 
     // Notification
     [NotificationNodeType.EMAIL]: CardNode,

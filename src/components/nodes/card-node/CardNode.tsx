@@ -29,10 +29,10 @@ const CardNode = memo(({ id, data, selected }: NodeProps<NodeData>) => {
 
     return (
         <div className={mergeStyles(
-            "w-55 bg-white rounded-xl shadow-card transition-all duration-200 group font-sans border relative",
+            "w-55 bg-white rounded-2xl transition-all duration-300 group font-sans border relative",
             selected
-                ? "ring-2 ring-primary-500/20 border-primary-500 shadow-card-hover"
-                : "border-slate-200/60 hover:border-slate-300 hover:shadow-card-hover"
+                ? "ring-2 ring-indigo-500 ring-offset-2 border-transparent shadow-premium scale-[1.02]"
+                : "border-slate-200 shadow-xl hover:border-indigo-200 hover:shadow-premium hover:scale-[1.01]"
         )}>
             <NodePorts />
 

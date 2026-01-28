@@ -4,17 +4,18 @@ import { ActiveMQBrokerConfig } from './ActiveMQBrokerConfig';
 import { ActiveMQPayloadConfig } from './ActiveMQPayloadConfig';
 import { ActiveMQDestinationConfig } from './ActiveMQDestinationConfig';
 import { ActiveMQSecurityConfig } from './ActiveMQSecurityConfig';
-import { VariableInput } from '../../../common/variable-input/VariableInput';
+
 
 interface ActiveMQConfigFormProps {
     config: ActiveMQNodeConfig;
     onChange: (key: string, value: any) => void;
+    fixedMode?: 'PRODUCER' | 'CONSUMER';
+    accentColor?: string;
 }
 
-const ActiveMQConfigForm: React.FC<ActiveMQConfigFormProps> = ({ config, onChange }) => {
-    // Default to PRODUCER if not set
-    const mode = config.activeMQMode || 'PRODUCER';
-    const accentColor = '#660033';
+const ActiveMQConfigForm: React.FC<ActiveMQConfigFormProps> = ({ config, onChange, fixedMode, accentColor = '#660033' }) => {
+    // Default to PRODUCER if not set, or use fixedMode if provided
+    const mode = fixedMode || config.activeMQMode || 'PRODUCER';
 
     return (
         <div className="space-y-3">
@@ -30,22 +31,22 @@ const ActiveMQConfigForm: React.FC<ActiveMQConfigFormProps> = ({ config, onChang
                 accentColor={accentColor}
             />
 
-            <ModeSelector
-                mode={mode}
-                onChange={(m) => onChange('activeMQMode', m)}
-                accentColor={accentColor}
-            />
+            {!fixedMode && (
+                <ModeSelector
+                    mode={mode}
+                    onChange={(m) => onChange('activeMQMode', m)}
+                    accentColor={accentColor}
+                />
+            )}
 
             {/* Mode Specific Section - Destination is now contextual */}
             <ActiveMQDestinationConfig
                 config={config}
                 onChange={onChange}
                 accentColor={accentColor}
+                mode={mode}
             />
 
-            {/* Payload / Consumer Settings - Wrapped in white box to match new style if needed, 
-                 or kept separate. Previous design had them separate. 
-                 Let's keep them clean. */}
             <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                 <ActiveMQPayloadConfig
                     kafkaMode={mode}

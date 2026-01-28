@@ -23,6 +23,7 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
       { label: "Webhook", nodeType: TriggerNodeType.WEBHOOK, icon: Bell, color: "text-blue-600" },
       { label: "Cron Schedule", nodeType: TriggerNodeType.CRON, icon: Clock, color: "text-violet-600" },
       { label: "Kafka Trigger", nodeType: TriggerNodeType.KAFKA, icon: KafkaIcon, color: "text-fuchsia-600" },
+      { label: "ActiveMQ Trigger", nodeType: TriggerNodeType.ACTIVEMQ, icon: ActiveMQIcon, color: "text-red-700" },
     ],
   },
   {

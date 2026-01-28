@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { RefreshCw, Plus, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { ActiveMQNodeConfig } from '../../../../types/workflow.interfaces';
 import { VariableInput } from '../../../common/variable-input/VariableInput';
@@ -8,19 +8,21 @@ interface ActiveMQDestinationConfigProps {
     config: ActiveMQNodeConfig;
     onChange: (key: string, value: any) => void;
     accentColor: string;
+    mode?: 'PRODUCER' | 'CONSUMER';
 }
 
 export const ActiveMQDestinationConfig: React.FC<ActiveMQDestinationConfigProps> = ({
     config,
     onChange,
-    accentColor
+    accentColor,
+    mode: propMode
 }) => {
     const [destinations, setDestinations] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [showCreate, setShowCreate] = useState(false);
 
     // Derived state
-    const mode = config.activeMQMode || 'PRODUCER';
+    const mode = propMode || config.activeMQMode || 'PRODUCER';
     const type = config.destinationType || 'QUEUE';
 
     // Styles
@@ -111,17 +113,6 @@ export const ActiveMQDestinationConfig: React.FC<ActiveMQDestinationConfigProps>
                         </div>
                     </div>
                     <div className="flex-1 relative">
-                        {/* We use VariableInput if typing, or we could overload a select if destinations are loaded */}
-                        {/* Hybrid approach: Text input with datalist behavior would be ideal, but for now let's keep VariableInput 
-                            but maybe check if we have destinations loaded to show a dropdown? 
-                            The user asked for "Refresh and Create New" explicitly, implying a Select-like behavior as well. 
-                            But Kafka config showed a Select. Let's try to mimic a Select or Autocomplete.
-                            Since VariableInput handles variables, replacing it entirely with a simple <select> loses variable support.
-                            Let's keep VariableInput but put the suggested destinations below if loaded, or just rely on the input.
-                            Actually, Kafka form uses a <select> OR VariableInput? No, KafkaTopicConfig uses a <select> and VariableInput for creating.
-                            Let's offer a choice or just VariableInput with datalist style? 
-                            Let's stick to VariableInput for maximum flexibility but allow selecting from loaded list if available.
-                         */}
 
                         {(destinations.length > 0) ? (
                             <select

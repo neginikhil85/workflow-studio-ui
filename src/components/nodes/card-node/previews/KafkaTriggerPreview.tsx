@@ -5,7 +5,7 @@ export const KafkaTriggerPreview: React.FC<{ config: any }> = ({ config }) => {
     return (
         <div className="flex flex-col gap-2 mt-2">
             <PreviewField
-                label="LISTENING TOPIC"
+                label="LISTENING TO"
                 value={config.topic}
                 title={config.topic}
                 placeholder="Configure Kafka trigger..."

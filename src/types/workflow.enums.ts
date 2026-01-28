@@ -11,6 +11,7 @@ export enum TriggerNodeType {
     WEBHOOK = 'TriggerNodeType_WEBHOOK',
     CRON = 'TriggerNodeType_CRON',
     KAFKA = 'TriggerNodeType_KAFKA',
+    ACTIVEMQ = 'TriggerNodeType_ACTIVEMQ',
 }
 
 export enum IntegrationNodeType {

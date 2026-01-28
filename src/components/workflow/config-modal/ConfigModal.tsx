@@ -61,6 +61,8 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ node, isOpen, onClose, onSave
                 return <HttpConfigForm config={config as HttpNodeConfig} onChange={handleConfigChange} />;
             case 'IntegrationNodeType_ACTIVE_MQ':
                 return <ActiveMQConfigForm config={config as ActiveMQNodeConfig} onChange={handleConfigChange} />;
+            case 'TriggerNodeType_ACTIVEMQ':
+                return <ActiveMQConfigForm config={config as ActiveMQNodeConfig} onChange={handleConfigChange} fixedMode="CONSUMER" accentColor="#660033" />;
             case 'IntegrationNodeType_KAFKA':
                 return <KafkaConfigForm config={config as KafkaNodeConfig} onChange={handleConfigChange} />;
             case 'TriggerNodeType_KAFKA':
