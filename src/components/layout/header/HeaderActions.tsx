@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Square, Play, History, Globe } from 'lucide-react';
+import { Trash2, Square, Play, History, Globe, Save } from 'lucide-react';
 import { HeaderExecution, HeaderPersistence } from '../../../types/workflow.interfaces';
 
 interface HeaderActionsProps {
@@ -42,10 +42,11 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({ execution, persist
             <div className="h-4 w-px bg-slate-200"></div>
 
             <button
-                className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-all shadow-sm shadow-blue-500/30"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-all shadow-sm shadow-blue-500/30"
                 onClick={persistence.saveWorkflow}
             >
-                Save
+                <Save size={16} />
+                <span>Save</span>
             </button>
 
             {/* Grouped Run & History Controls (Split Button) */}
